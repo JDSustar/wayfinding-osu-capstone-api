@@ -15,7 +15,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'gs-rest-service'
+    baseName = 'API-Service'
     version =  '0.1.0'
 }
 
@@ -28,6 +28,16 @@ repositories {
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile("junit:junit")
+}
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    compile name: 'ojdbc61'
 }
 
 task wrapper(type: Wrapper) {

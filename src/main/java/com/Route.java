@@ -1,7 +1,16 @@
 package com;
 
-/**
- * Created by Gregg on 2/12/2015.
- */
+import java.util.List;
+
 public class Route {
+    private final List<Location> route;
+
+    public Route(List<Location> route){
+        this.route = route;
+    }
+
+    public List<Location> getRoute(){
+        return route;
+    }
+
 }

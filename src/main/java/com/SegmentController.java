@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class SegmentController {
 
-    public SegmentCollection edges()
+    public SegmentCollection segments()
     {
-        List<Segment> edges = new ArrayList<Segment>();
+        List<Segment> segments = new ArrayList<Segment>();
 
         Statement statement = null;
         Connection conn = null;
@@ -46,7 +46,7 @@ public class SegmentController {
                 String hazard = rs.getString("potentialhazard");
                 //int weight = rs.getInt("");
                 int accessible = rs.getInt("accessible");
-                edges.add(new Segment(1,accessible,streetCrossing,description,hazard));
+                segments.add(new Segment(1,accessible,streetCrossing,description,hazard));
                 i++;
             }
 
@@ -67,6 +67,6 @@ public class SegmentController {
                 se.printStackTrace();
             }//end finally try
         }
-        return new SegmentCollection(edges);
+        return new SegmentCollection(segments);
     }
 }

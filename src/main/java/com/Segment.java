@@ -11,8 +11,8 @@ public class Segment {
     private final String streetCrossing;
     private final String description;
     private final String hazard;
-    private final Location toNode = new Location(-1,"NOTHING");
-    private final Location fromNode = new Location(-1,"NOTHING");
+    private Location toNode;
+    private Location fromNode;
 
 
     public Segment(int weight, int accessible, String streetCrossing, String description,
@@ -22,6 +22,8 @@ public class Segment {
         this.streetCrossing = streetCrossing;
         this.description = description;
         this.hazard = hazard;
+        this.toNode = new Location(-1,"NOTHING");
+        this.fromNode = new Location(-1,"NOTHING");
     }
 
     public String getStreetCrossing()
@@ -42,6 +44,16 @@ public class Segment {
     public int getWeight() {return weight;}
 
     public int getAccessible() {return accessible;}
+
+    public Location getToNode()
+    {
+        return toNode;
+    }
+
+    public Location getFromNode()
+    {
+        return fromNode;
+    }
 
     public int getNeighbourIndex(int nodeIndex) {
         if (this.toNode.getId() == nodeIndex) {

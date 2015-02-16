@@ -3,7 +3,7 @@ package com;
 import java.util.*;
 
 public class RouteCollection {
-    public List<Route> routes;
+    private List<Route> routes;
 
     public RouteCollection() {
         routes = new ArrayList<Route>();

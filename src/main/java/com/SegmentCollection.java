@@ -18,4 +18,10 @@ public class SegmentCollection {
         return segments;
     }
 
+    public void add(int i, Segment s){
+        if(!segments.contains(s)){
+            segments.add(i, s);
+        }
+    }
+
 }

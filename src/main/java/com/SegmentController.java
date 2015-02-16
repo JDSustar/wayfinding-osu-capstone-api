@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jim on 2/13/2015.
- */
+import oracle.spatial.geometry.JGeometry;
+import oracle.sql.STRUCT;
+
 public class SegmentController {
 
     public SegmentCollection segments()
@@ -35,19 +35,29 @@ public class SegmentController {
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
-            String edgesSelectStatement = "SELECT UNIQUE id FROM ROUTELINE";
+            String edgesSelectStatement = "SELECT A.ID, SDO_UTIL.EXTRACT(A.GEOM, 1) FROM ROUTELINE A";
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
-            int i = 0;
 
             while (rs.next()) {
-                String streetCrossing = rs.getString("streetcrossing");
-                String description = rs.getString("description");
-                String hazard = rs.getString("potentialhazard");
-                //int weight = rs.getInt("");
-                int accessible = rs.getInt("accessible");
-                segments.add(new Segment(1,accessible,streetCrossing,description,hazard));
-                i++;
+                int id = rs.getInt("ID");
+                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject(2)).getOrdinatesArray();
+                Location node1= new Location(0, "NA", 0.0, 0.0);
+                LocationCollection lc = new LocationCollection();
+                int lccount=0;
+
+                for(int i=0; i<coord.length-1; i++){
+                    if(i == 0){
+                        node1 = new Location(id, "NA", coord[i], coord[i+1]);
+                    } else {
+                        Location node_temp = new Location(id, "NA", coord[i], coord[i+1]);
+                        lc.add(lccount, node_temp);
+                        lccount++;
+                    }
+                    i++;
+                }
+
+                segments.add(new Segment(id, node1, lc));
             }
 
             rs.close();

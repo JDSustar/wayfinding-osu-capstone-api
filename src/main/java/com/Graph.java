@@ -1,8 +1,5 @@
 package com;
 
-/**
- * Created by Jim on 2/15/2015.
- */
 public class Graph {
     private Location[] nodes;
     private int noOfNodes;
@@ -38,16 +35,16 @@ public class Graph {
         // Add all the edges to the nodes. Each edge is added to 2 nodes (the "to" and the "from")
         this.noOfEdges = edges.length;
         for (int edgeToAdd = 0; edgeToAdd < this.noOfEdges; edgeToAdd++) {
-            this.nodes[edges[edgeToAdd].getFromNode().getId()].getEdges().add(edges[edgeToAdd]);
-            this.nodes[edges[edgeToAdd].getToNode().getId()].getEdges().add(edges[edgeToAdd]);
+            //this.nodes[edges[edgeToAdd].getNode1().getId()].getEdges().add(edges[edgeToAdd]);
+//            this.nodes[edges[edgeToAdd].getNode2().getId()].getEdges().add(edges[edgeToAdd]);
         }
     }
 
     private int calculateNoOfNodes(Segment[] edges) {
         int noOfNodes = 0;
         for (Segment e:edges ) {
-            if (e.getToNode().getId() > noOfNodes) noOfNodes = e.getToNode().getId();
-            if (e.getFromNode().getId() > noOfNodes) noOfNodes = e.getFromNode().getId();
+            if (e.getNode1().getId() > noOfNodes) noOfNodes = e.getNode1().getId();
+//            if (e.getNode2().getId() > noOfNodes) noOfNodes = e.getNode2().getId();
         }
         noOfNodes++;
         return noOfNodes;

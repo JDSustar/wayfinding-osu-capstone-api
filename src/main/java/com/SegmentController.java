@@ -42,22 +42,20 @@ public class SegmentController {
             while (rs.next()) {
                 int id = rs.getInt("ID");
                 double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject(2)).getOrdinatesArray();
-                Location node1= new Location(0, "NA", 0.0, 0.0);
+                Location node1= new Location(id, "NA", coord[0], coord[1]);
                 LocationCollection lc = new LocationCollection();
                 int lccount=0;
 
                 for(int i=0; i<coord.length-1; i++){
-                    if(i == 0){
-                        node1 = new Location(id, "NA", coord[i], coord[i+1]);
-                    } else {
-                        Location node_temp = new Location(id, "NA", coord[i], coord[i+1]);
-                        lc.add(lccount, node_temp);
-                        lccount++;
-                    }
+                    Location node_temp = new Location(id, "NA", coord[i], coord[i+1]);
+                    lc.add(lccount, node_temp);
+                    lccount++;
                     i++;
                 }
 
-                segments.add(new Segment(id, node1, lc));
+                for(Location l : lc.getLocations()) {
+                    segments.add(new Segment(id, node1, l));
+                }
             }
 
             rs.close();

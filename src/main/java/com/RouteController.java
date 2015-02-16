@@ -35,12 +35,8 @@ public class RouteController {
         SegmentController sc = new SegmentController();
         SegmentCollection scc = sc.segments();
 
-//        for(Segment s : sc.getSegments()){
+//        for(Segment s : scc.getSegments()){
 //            System.out.println(s.getId() + "|" + s.getNode1().getSpcx() + "|" + s.getNode1().getSpcy());
-//
-//            for(Location l : s.getNode2().getLocations()){
-//                System.out.println("\t" + l.getId() + "|" + l.getSpcx() + "|" + l.getSpcy());
-//            }
 //        }
 
     }

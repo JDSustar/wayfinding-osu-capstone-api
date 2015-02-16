@@ -46,7 +46,7 @@ public class SegmentController {
                 LocationCollection lc = new LocationCollection();
                 int lccount=0;
 
-                for(int i=0; i<coord.length-1; i++){
+                for(int i=2; i<coord.length-1; i++){
                     Location node_temp = new Location(id, "NA", coord[i], coord[i+1]);
                     lc.add(lccount, node_temp);
                     lccount++;

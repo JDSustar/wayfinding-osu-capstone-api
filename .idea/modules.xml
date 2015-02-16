@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OSUWayfindingAPI.iml" filepath="$PROJECT_DIR$/OSUWayfindingAPI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/jgrapht-master/jgrapht-master/jgrapht-master.iml" filepath="$PROJECT_DIR$/lib/jgrapht-master/jgrapht-master/jgrapht-master.iml" />
     </modules>
   </component>
 </project>

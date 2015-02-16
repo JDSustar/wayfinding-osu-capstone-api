@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="TGGraphLayout-UNKNOWN">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-touchgraph/3rdparty/com/touchgraph/TGGraphLayout/UNKNOWN/TGGraphLayout-UNKNOWN.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

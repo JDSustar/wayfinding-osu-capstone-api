@@ -26,7 +26,6 @@ repositories {
 }
 
 dependencies {
-    compile project(":jgrapht-master")
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile("junit:junit")
 }

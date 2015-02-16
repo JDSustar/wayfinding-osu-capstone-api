@@ -28,7 +28,7 @@ public class RouteController {
         LocationController lc = new LocationController();
         LocationCollection lcc = lc.locations();
 
-//        for(Location l : lc.getLocations()){
+//        for(Location l : lcc.getLocations()){
 //            System.out.println(l.getId() + "|" + l.getName() + "|" + l.getSpcx() + "|" + l.getSpcy());
 //        }
 
@@ -38,6 +38,9 @@ public class RouteController {
 //        for(Segment s : scc.getSegments()){
 //            System.out.println(s.getId() + "|" + s.getNode1().getSpcx() + "|" + s.getNode1().getSpcy());
 //        }
+
+
+
 
     }
 }

@@ -9,10 +9,13 @@ public class RouteController {
 
 
     @RequestMapping("/generateRoute")
-     public void generateRoute(double longitude, double latitude){
+     public void generateRoute(double spcx, double spcy){
 
+        // convert to lat long
 
+        // grab all locations and segments from db
 
+        // Dijkstra's Algorithm
 
 
 

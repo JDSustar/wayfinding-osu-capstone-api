@@ -51,6 +51,11 @@ public class SegmentController {
             }
 
             rs.close();
+
+            //This SQL statement gets the X and Y coordinates from the GEOM column
+            /*SELECT c.ID, t.X, t.Y
+            FROM ROUTELINE c,
+                    TABLE(SDO_UTIL.GETVERTICES(c.GEOM)) t;*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

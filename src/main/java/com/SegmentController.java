@@ -1,18 +1,21 @@
-
 package com;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-@RestController
-public class LocationController {
-    @RequestMapping("/locations")
-    public LocationCollection locations() {
+/**
+ * Created by Jim on 2/13/2015.
+ */
+public class SegmentController {
 
-        List<Location> locations = new ArrayList<Location>();
+    public SegmentCollection segments()
+    {
+        List<Segment> segments = new ArrayList<Segment>();
 
         Statement statement = null;
         Connection conn = null;
@@ -32,14 +35,18 @@ public class LocationController {
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
-            String locationsSelectStatement = "SELECT UNIQUE name FROM ROUTENODE";
+            String edgesSelectStatement = "SELECT UNIQUE id FROM ROUTELINE";
 
-            ResultSet rs = statement.executeQuery(locationsSelectStatement);
+            ResultSet rs = statement.executeQuery(edgesSelectStatement);
             int i = 0;
 
             while (rs.next()) {
-                String name = rs.getString("name");
-                locations.add(new Location(i, name, 0.0, 0.0));
+                String streetCrossing = rs.getString("streetcrossing");
+                String description = rs.getString("description");
+                String hazard = rs.getString("potentialhazard");
+                //int weight = rs.getInt("");
+                int accessible = rs.getInt("accessible");
+                segments.add(new Segment(1,accessible,streetCrossing,description,hazard));
                 i++;
             }
 
@@ -60,7 +67,6 @@ public class LocationController {
                 se.printStackTrace();
             }//end finally try
         }
-
-        return new LocationCollection(locations);
+        return new SegmentCollection(segments);
     }
 }

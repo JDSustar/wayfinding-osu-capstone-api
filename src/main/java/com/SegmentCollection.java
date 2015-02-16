@@ -3,10 +3,10 @@ package com;
 import java.util.*;
 
 public class SegmentCollection {
+    private final List<Segment> segments;
 
-    public List<Segment> segments;
-
-    public SegmentCollection(){
+    public SegmentCollection()
+    {
         segments = new ArrayList<Segment>();
     }
 

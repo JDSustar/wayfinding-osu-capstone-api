@@ -1,19 +1,63 @@
 package com;
 
+import java.util.*;
+
 public class Segment {
-    private final Location loc1;
-    private final Location loc2;
+    private final int weight;
+    private final int accessible;
+    private final String streetCrossing;
+    private final String description;
+    private final String hazard;
+    private Location toNode;
+    private Location fromNode;
 
-    public Segment(Location loc1, Location loc2){
-        this.loc1 = loc1;
-        this.loc2 = loc2;
+
+    public Segment(int weight, int accessible, String streetCrossing, String description,
+        String hazard) {
+        this.weight = weight;
+        this.accessible = accessible;
+        this.streetCrossing = streetCrossing;
+        this.description = description;
+        this.hazard = hazard;
+        this.toNode = new Location(-1,"NOTHING", 0.0, 0.0);
+        this.fromNode = new Location(-1,"NOTHING", 0.0, 0.0);
     }
 
-    public Location getLocation1(){
-        return loc1;
+    public String getStreetCrossing()
+    {
+        return streetCrossing;
     }
 
-    public Location getLocation2(){
-        return loc2;
+    public String getDescription()
+    {
+        return description;
     }
+
+    public String getHazard()
+    {
+        return hazard;
+    }
+
+    public int getWeight() {return weight;}
+
+    public int getAccessible() {return accessible;}
+
+    public Location getToNode()
+    {
+        return toNode;
+    }
+
+    public Location getFromNode()
+    {
+        return fromNode;
+    }
+
+    public int getNeighbourIndex(int nodeIndex) {
+        if (this.toNode.getId() == nodeIndex) {
+            return this.toNode.getId();
+        } else {
+            return this.fromNode.getId();
+        }
+    }
+
 }

@@ -45,4 +45,41 @@ public class Utility {
 
         return new double[]{};
     }
+
+    public static void main (String[] args) {
+        String[] names = {
+                "Stillman Hall",
+                "Evans Lab",
+                "Smith Lab",
+                "Dreese Lab",
+                "Prior Lib"
+        };
+
+        // Sample coordinates
+        double[] database = {
+                1825399.99612252,729498.427258271, // Stillman Hall
+                1825298.89496999,729843.911311694, // Evans Lab
+                1824759.23467167,729830.663313218, // Smith Lab
+                1823961.27227782,729648.987292714, // Dreese Lab
+                1823568.19746685,726938.919614419  // Prior Lib
+        };
+
+        // correct values
+        double[] coordinates = {
+                40.0017588, -083.0107930,
+                40.0027056, -083.0111609,
+                40.0026608, -083.0130869,
+                40.0021496, -083.0159315,
+                39.9947041, -083.0172791
+        };
+
+        for (int i = 0; i < names.length; i++) {
+            System.out.println("========================================");
+            System.out.format("Name: %s\n", names[i]);
+            System.out.format("E/N:      %f %f\n", database[(i * 2)], database[(i * 2) + 1]);
+            System.out.format("Lat/Long: %7.5f %7.5f\n",coordinates[(i * 2)], coordinates[(i * 2) + 1]);
+            Coordinate tmp = new Coordinate(database[(i * 2)], database[(i * 2) + 1], Coordinate.TYPE.NAD_27);
+            System.out.format("jhlabs:   %7.5f %7.5\n", tmp.getLatitude(), tmp.getLongitude());
+        }
+    }
 }

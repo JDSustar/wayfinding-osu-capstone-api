@@ -5,10 +5,14 @@ import java.awt.geom.Point2D;
 /**
  * Created by tjf3191 on 2/16/15.
  */
+
+import jhlabs.map.proj.ProjectionFactory;
+import jhlabs.map.proj.Projection;
+
 public class Utility {
 
     // Class variable for calculating the projection
-    //private static final Projection nad27= ProjectionFactory.getNamedPROJ4CoordinateSystem("nad27:3402");
+    private static final Projection nad27= ProjectionFactory.getNamedPROJ4CoordinateSystem("nad27:3402");
 
     // Class variable for converting survey feet to meters
     public static final double survey2meter = 1200.0 / 3937.0;
@@ -25,7 +29,7 @@ public class Utility {
         Point2D.Double result = new Point2D.Double(0.0, 0.0);
 
         // Using library for conversion
-        //nad27.inverseTransform(new Point2D.Double(eastling * survey2meter, northling * survey2meter), result);
+        nad27.inverseTransform(new Point2D.Double(eastling * survey2meter, northling * survey2meter), result);
 
         // Standard correction to coordinates
         double latitude = result.getY() + 0.00049;

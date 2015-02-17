@@ -9,8 +9,8 @@ public class Coordinate {
      * TYPE is for the constructor to differ which data is the original data.
      */
     public static enum TYPE {
-        NAD_27_TO_GCS,
-        GCS_TO_NAD_27
+        NAD_27,
+        GCS
     };
 
     /**
@@ -41,14 +41,14 @@ public class Coordinate {
 
         double[] results;
 
-        if (type == TYPE.NAD_27_TO_GCS) {
+        if (type == TYPE.NAD_27) {
             this.eastling = x;
             this.northling = y;
             results = Utility.Nad27toGCS(eastling, northling);
             this.latitude = results[1];
             this.longitude = results[0];
 
-        } else if (type == TYPE.GCS_TO_NAD_27) {
+        } else if (type == TYPE.GCS) {
             this.latitude = y;
             this.longitude = x;
             results = Utility.GCStoNad27(this.latitude, this.longitude);

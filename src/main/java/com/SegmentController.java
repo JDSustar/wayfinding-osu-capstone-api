@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import oracle.spatial.JGeometry;
 
 /**
  * Created by Jim on 2/13/2015.
@@ -35,27 +36,66 @@ public class SegmentController {
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
-            String edgesSelectStatement = "SELECT UNIQUE id FROM ROUTELINE";
+            String edgesSelectStatement = "SELECT A.ID, A.STREETCROSSING, A.DESCRIPTION, A.POTENTIALHAZARD," +
+                    " A.ACCESSIBLE, SDO_UTIL.EXTRACT(A.GEOM, 1) FROM ROUTELINE A";
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
-            int i = 0;
+
+            LocationController lc = new LocationController();
+            LocationCollection locationCollection = lc.locations();
+            List<Location> locations = locationCollection.getLocations();
 
             while (rs.next()) {
-                String streetCrossing = rs.getString("streetcrossing");
-                String description = rs.getString("description");
-                String hazard = rs.getString("potentialhazard");
+                String streetCrossing = rs.getString("STREETCROSSING");
+                String description = rs.getString("DESCRIPTION");
+                String hazard = rs.getString("POTENTIALHAZARD");
                 //int weight = rs.getInt("");
-                int accessible = rs.getInt("accessible");
-                segments.add(new Segment(1,accessible,streetCrossing,description,hazard));
-                i++;
+                int accessible = rs.getInt("ACCESSIBLE");
+                int id = rs.getInt("ID");
+                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("geom")).getOrdinatesArray();
+                Location startNode = new Location(id,"NOT INITIALIZED",0,0);
+                Location endNode = new Location(id,"NOT INITIALIZED",0,0);
+                List<Location> intermediateNodes = new ArrayList<Location>();
+                for (int index = 0; index < coord.length; index+=2) {
+                    for (Location loc : locations) {
+                        double lat = loc.getLatitude();
+                        double longit = loc.getLongitude();
+                        if (coord[index] == lat && coord[index+1] == longit)
+                        {
+                            if(index == 0)
+                            {
+                                startNode = loc;
+                            }
+                            else if (index+1 == coord.length-1)
+                            {
+                                endNode = loc;
+                            }
+                            else
+                            {
+                                intermediateNodes.add(loc);
+                            }
+                        }
+                        else
+                        {
+                            if(index == 0)
+                            {
+                                startNode = new Location(id,"StartNode",lat,longit);
+                            }
+                            else if (index+1 == coord.length-1)
+                            {
+                                endNode = new Location(id,"EndNode",lat,longit);
+                            }
+                            else
+                            {
+                                intermediateNodes.add(new Location(id,"IntermediateNode",lat,longit));
+                            }
+                        }
+                    }
+                }
+                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 
             rs.close();
-
-            //This SQL statement gets the X and Y coordinates from the GEOM column
-            /*SELECT c.ID, t.X, t.Y
-            FROM ROUTELINE c,
-                    TABLE(SDO_UTIL.GETVERTICES(c.GEOM)) t;*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

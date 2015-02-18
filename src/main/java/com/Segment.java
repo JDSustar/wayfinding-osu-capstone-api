@@ -1,6 +1,7 @@
 package com;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Jim on 2/13/2015.
@@ -11,19 +12,21 @@ public class Segment {
     private final String streetCrossing;
     private final String description;
     private final String hazard;
-    private Location toNode;
-    private Location fromNode;
+    private final Location startNode;
+    private final Location endNode;
+    private final List<Location> intermediateNodes;
 
 
     public Segment(int weight, int accessible, String streetCrossing, String description,
-        String hazard) {
+        String hazard, Location startNode, Location endNode, List<Location> intermediateNodes) {
         this.weight = weight;
         this.accessible = accessible;
         this.streetCrossing = streetCrossing;
         this.description = description;
         this.hazard = hazard;
-        this.toNode = new Location(-1,"NOTHING");
-        this.fromNode = new Location(-1,"NOTHING");
+        this.startNode = startNode;
+        this.endNode = endNode;
+        this.intermediateNodes = intermediateNodes;
     }
 
     public String getStreetCrossing()
@@ -47,19 +50,19 @@ public class Segment {
 
     public Location getToNode()
     {
-        return toNode;
+        return startNode;
     }
 
     public Location getFromNode()
     {
-        return fromNode;
+        return endNode;
     }
 
     public int getNeighbourIndex(int nodeIndex) {
-        if (this.toNode.getId() == nodeIndex) {
-            return this.toNode.getId();
+        if (this.startNode.getId() == nodeIndex) {
+            return this.startNode.getId();
         } else {
-            return this.fromNode.getId();
+            return this.endNode.getId();
         }
     }
 

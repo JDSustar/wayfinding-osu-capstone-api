@@ -7,12 +7,16 @@ public class Location{
     private final String name;
     private int distanceFromStart;
     private boolean visited;
+    private final double latitude;
+    private final double longitude;
 
-    public Location(int id, String name) {
+    public Location(int id, String name, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.distanceFromStart = Integer.MAX_VALUE;
         this.visited = false;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getDistanceFromStart() {
@@ -40,7 +44,11 @@ public class Location{
         this.visited = visited;
     }
 
-    public ArrayList<Segment> getEdges() {
+    public double getLatitude(){ return latitude; }
+
+    public double getLongitude() {  return longitude; }
+
+    /*public ArrayList<Segment> getEdges() {
         return getEdges();
-    }
+    }*/
 }

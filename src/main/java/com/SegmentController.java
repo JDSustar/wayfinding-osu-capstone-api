@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import oracle.spatial.JGeometry;
+//import oracle.spatial.JGeometry;
 
 /**
  * Created by Jim on 2/13/2015.
@@ -52,7 +52,7 @@ public class SegmentController {
                 //int weight = rs.getInt("");
                 int accessible = rs.getInt("ACCESSIBLE");
                 int id = rs.getInt("ID");
-                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("geom")).getOrdinatesArray();
+                /*double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("geom")).getOrdinatesArray();
                 Location startNode = new Location(id,"NOT INITIALIZED",0,0);
                 Location endNode = new Location(id,"NOT INITIALIZED",0,0);
                 List<Location> intermediateNodes = new ArrayList<Location>();
@@ -92,7 +92,7 @@ public class SegmentController {
                         }
                     }
                 }
-                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
+                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));*/
             }
 
             rs.close();

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.*;
-
 import com.LocationController;
 import com.SegmentController;
 
@@ -24,7 +23,6 @@ public class RouteController {
 
         // Dijkstra's Algorithm
 
-
 //        LocationController lc = new LocationController();
 //        LocationCollection lcc = lc.locations();
 
@@ -39,10 +37,7 @@ public class RouteController {
 //            System.out.println(s.getId() + "|" + s.getNode1().getSpcx() + "|" + s.getNode1().getSpcy());
 //        }
 
-
-
         // complete graph generator. build vertex factory coordinate-vertices
-
 
 
 

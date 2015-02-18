@@ -13,7 +13,6 @@ public class Segment {
         this.Node1 = Node1;
         this.Node2 = Node2;
         distance = Math.sqrt(Math.pow(Node2.getSpcx() - Node1.getSpcx(), 2) + Math.pow(Node2.getSpcy() - Node1.getSpcy(), 2));
-        System.out.println("distance: " + distance);
     }
 
     public int getId() { return id; }

@@ -47,6 +47,8 @@
     <orderEntry type="library" exported="" name="Gradle: logback-core-1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit-4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="sdoapi" level="project" />
+    <orderEntry type="library" exported="" name="sdoutl" level="project" />
   </component>
 </module>
 

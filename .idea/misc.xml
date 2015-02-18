@@ -3,6 +3,23 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-core/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-dist/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-ext/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-touchgraph/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android API 21 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

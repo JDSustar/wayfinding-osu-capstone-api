@@ -47,6 +47,7 @@ public class Utility {
     }
 
     public static void main (String[] args) {
+
         String[] names = {
                 "Stillman Hall",
                 "Evans Lab",
@@ -79,7 +80,7 @@ public class Utility {
             System.out.format("E/N:      %f %f\n", database[(i * 2)], database[(i * 2) + 1]);
             System.out.format("Lat/Long: %7.5f %7.5f\n",coordinates[(i * 2)], coordinates[(i * 2) + 1]);
             Coordinate tmp = new Coordinate(database[(i * 2)], database[(i * 2) + 1], Coordinate.TYPE.NAD_27);
-            System.out.format("jhlabs:   %7.5f %7.5\n", tmp.getLatitude(), tmp.getLongitude());
+            System.out.format("jhlabs:   %7.5f %7.5f\n", tmp.getLatitude(), tmp.getLongitude());
         }
     }
 }

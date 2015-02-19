@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: spring-boot-starter-web-1.1.10.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: ojdbc61" level="project" />
@@ -55,6 +55,7 @@
     <orderEntry type="library" exported="" name="jgraphx-2.0.0.1" level="project" />
     <orderEntry type="library" exported="" name="sdoapi" level="project" />
     <orderEntry type="library" exported="" name="sdoutl" level="project" />
+    <orderEntry type="library" exported="" name="ojdbc61" level="project" />
   </component>
 </module>
 

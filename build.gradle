@@ -36,6 +36,10 @@ repositories {
     }
 }
 
+springBoot {
+    mainClass = "com.Application"
+}
+
 dependencies {
     compile name: 'ojdbc61'
 }

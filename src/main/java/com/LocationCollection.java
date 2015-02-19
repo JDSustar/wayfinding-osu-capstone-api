@@ -7,7 +7,7 @@ import java.util.*;
 
 public class LocationCollection
 {
-    public List<Location> locations;
+    private List<Location> locations;
 
     public LocationCollection()
     {
@@ -21,5 +21,11 @@ public class LocationCollection
 
     public List<Location> getLocations() {
         return locations;
+    }
+
+    public void add(int i, Location l){
+        if(!locations.contains(l)){
+            locations.add(i, l);
+        }
     }
 }

@@ -38,7 +38,7 @@ public class SegmentController {
 
             statement = conn.createStatement();
             String edgesSelectStatement = "SELECT A.ID, A.STREETCROSSING, A.DESCRIPTION, A.POTENTIALHAZARD," +
-                    " A.ACCESSIBLE, SDO_UTIL.EXTRACT(A.GEOM, 1) FROM ROUTELINE A";
+                    " A.ACCESSIBLE, SDO_UTIL.EXTRACT(A.GEOM, 1) AS GEOMETRY FROM ROUTELINE A";
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
 
@@ -53,7 +53,7 @@ public class SegmentController {
                 //int weight = rs.getInt("");
                 int accessible = rs.getInt("ACCESSIBLE");
                 int id = rs.getInt("ID");
-                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("geom")).getOrdinatesArray();
+                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("GEOMETRY")).getOrdinatesArray();
                 Location startNode = new Location(id,"NOT INITIALIZED",0,0);
                 Location endNode = new Location(id,"NOT INITIALIZED",0,0);
                 List<Location> intermediateNodes = new ArrayList<Location>();

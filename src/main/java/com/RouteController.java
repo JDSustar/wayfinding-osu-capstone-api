@@ -35,7 +35,7 @@ public class RouteController {
 //        }
 //
 //        for(Segment s : scc.getSegments()){
-//            ug.addEdge(s.getNode1(), s.getNode2());
+//            ug.addEdge(s.getToNode(), s.getFromNode());
 //        }
 //
 //        Location s = new Location(14, "Stillman Hall", 1825399.99612252, 729498.427258271);
@@ -43,7 +43,7 @@ public class RouteController {
 //        List<Segment> l = DijkstraShortestPath.findPathBetween(ug, s, e);
 //
 //        for(Segment ss : l){
-//            System.out.println(ss.getNode1().getName() + " - " +  ss.getNode2().getName());
+//            System.out.println(ss.getToNode().getName() + " - " +  ss.getFromNode().getName());
 //        }
     }
 }

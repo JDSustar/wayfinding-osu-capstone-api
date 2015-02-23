@@ -48,9 +48,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: junit-4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: hamcrest-core-1.3" level="project" />
     <orderEntry type="library" exported="" name="sdoapi" level="project" />
-<<<<<<< HEAD
-    <orderEntry type="library" exported="" name="java" level="project" />
-=======
     <orderEntry type="library" exported="" name="sdoutl" level="project" />
     <orderEntry type="library" exported="" name="jgraph-5.13.0.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-core-0.9.0" level="project" />
@@ -58,8 +55,9 @@
     <orderEntry type="library" exported="" name="jgrapht-ext-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-ext-0.9.0-uber" level="project" />
     <orderEntry type="library" exported="" name="jgraphx-2.0.0.1" level="project" />
->>>>>>> 13e6f88f61bd59eb1d9c8991830db526215def71
     <orderEntry type="library" exported="" name="ojdbc61" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: sdoapi" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: sdoutl" level="project" />
   </component>
 </module>
 

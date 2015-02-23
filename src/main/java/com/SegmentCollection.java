@@ -1,9 +1,13 @@
 package com;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Created by Jim on 2/13/2015.
+ */
 public class SegmentCollection {
-    private final List<Segment> segments;
+    private static List<Segment> segments;
 
     public SegmentCollection()
     {
@@ -14,14 +18,7 @@ public class SegmentCollection {
         this.segments = segments;
     }
 
-    public List<Segment> getSegments(){
+    public List<Segment> getEdges(){
         return segments;
     }
-
-    public void add(int i, Segment s){
-        if(!segments.contains(s)){
-            segments.add(i, s);
-        }
-    }
-
 }

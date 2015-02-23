@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.spatial.geometry.JGeometry;
-import oracle.sql.STRUCT;
 
+/**
+ * Created by Jim on 2/13/2015.
+ */
 public class SegmentController {
 
     public SegmentCollection segments()
@@ -35,27 +37,63 @@ public class SegmentController {
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
-            String edgesSelectStatement = "SELECT A.ID, SDO_UTIL.EXTRACT(A.GEOM, 1) FROM ROUTELINE A";
+            String edgesSelectStatement = "SELECT A.ID, A.STREETCROSSING, A.DESCRIPTION, A.POTENTIALHAZARD," +
+                    " A.ACCESSIBLE, SDO_UTIL.EXTRACT(A.GEOM, 1) AS GEOMETRY FROM ROUTELINE A";
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
 
+            LocationController lc = new LocationController();
+            LocationCollection locationCollection = lc.locations();
+            List<Location> locations = locationCollection.getLocations();
+
             while (rs.next()) {
+                String streetCrossing = rs.getString("STREETCROSSING");
+                String description = rs.getString("DESCRIPTION");
+                String hazard = rs.getString("POTENTIALHAZARD");
+                //int weight = rs.getInt("");
+                int accessible = rs.getInt("ACCESSIBLE");
                 int id = rs.getInt("ID");
-                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject(2)).getOrdinatesArray();
-                Location node1= new Location(id, "NA", coord[0], coord[1]);
-                LocationCollection lc = new LocationCollection();
-                int lccount=0;
-
-                for(int i=2; i<coord.length-1; i++){
-                    Location node_temp = new Location(id, "NA", coord[i], coord[i+1]);
-                    lc.add(lccount, node_temp);
-                    lccount++;
-                    i++;
+                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("GEOMETRY")).getOrdinatesArray();
+                Location startNode = new Location(id,"NOT INITIALIZED",0,0);
+                Location endNode = new Location(id,"NOT INITIALIZED",0,0);
+                List<Location> intermediateNodes = new ArrayList<Location>();
+                for (int index = 0; index < coord.length; index+=2) {
+                    for (Location loc : locations) {
+                        double lat = loc.getLatitude();
+                        double longit = loc.getLongitude();
+                        if (coord[index] == lat && coord[index+1] == longit)
+                        {
+                            if(index == 0)
+                            {
+                                startNode = loc;
+                            }
+                            else if (index+1 == coord.length-1)
+                            {
+                                endNode = loc;
+                            }
+                            else
+                            {
+                                intermediateNodes.add(loc);
+                            }
+                        }
+                        else
+                        {
+                            if(index == 0)
+                            {
+                                startNode = new Location(id,"StartNode",lat,longit);
+                            }
+                            else if (index+1 == coord.length-1)
+                            {
+                                endNode = new Location(id,"EndNode",lat,longit);
+                            }
+                            else
+                            {
+                                intermediateNodes.add(new Location(id,"IntermediateNode",lat,longit));
+                            }
+                        }
+                    }
                 }
-
-                for(Location l : lc.getLocations()) {
-                    segments.add(new Segment(id, node1, l));
-                }
+                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 
             rs.close();

@@ -36,8 +36,14 @@ repositories {
     }
 }
 
+springBoot {
+    mainClass = "com.Application"
+}
+
 dependencies {
     compile name: 'ojdbc61'
+    compile name: 'sdoapi'
+    compile name: 'sdoutl'
 }
 
 task wrapper(type: Wrapper) {

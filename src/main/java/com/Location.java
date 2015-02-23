@@ -1,29 +1,49 @@
 package com;
 
-import java.util.ArrayList;
-
 public class Location{
     private final int id;
     private final String name;
-    private final double spcx;
-    private final double spcy;
+    private int distanceFromStart;
+    private boolean visited;
+    private final double latitude;
+    private final double longitude;
 
-    public Location(int id, String name, double spcx, double spcy) {
+    public Location(int id, String name, double latitude, double longitude) {
         this.id = id;
         this.name = name;
-        this.spcx = spcx;
-        this.spcy = spcy;
+        this.distanceFromStart = Integer.MAX_VALUE;
+        this.visited = false;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public int getId() {return id;}
+    public int getDistanceFromStart() {
+        return distanceFromStart;
+    }
+
+    public void setDistanceFromStart(int distanceFromStart) {
+        this.distanceFromStart = distanceFromStart;
+    }
 
     public String getName()
     {
         return name;
     }
 
-    public double getSpcx(){ return spcx; }
+    public int getId() {return id;}
 
-    public double getSpcy() {  return spcy; }
+    public boolean isVisited()
+    {
+        return this.visited;
+    }
+
+    public void setVisited(boolean visited)
+    {
+        this.visited = visited;
+    }
+
+    public double getLatitude(){ return latitude; }
+
+    public double getLongitude() {  return longitude; }
 
 }

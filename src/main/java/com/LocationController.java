@@ -32,18 +32,21 @@ public class LocationController {
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
+            //String locationsSelectStatement = "SELECT UNIQUE name FROM ROUTENODE";
             String locationsSelectStatement = "SELECT A.ID, A.NAME, T.X, T.Y FROM ROUTENODE A, TABLE(SDO_UTIL.GETVERTICES(A.GEOM)) T";
 
             ResultSet rs = statement.executeQuery(locationsSelectStatement);
-            int i = 0;
+            //int i = 0;
 
             while (rs.next()) {
                 int id = rs.getInt("ID");
                 String name = rs.getString("NAME");
+                //NEED TO CONVERT THESE TO LAT/LONG --------------
                 double spcx = rs.getDouble("X");
                 double spcy = rs.getDouble("Y");
+                //-----------------------------------------------
                 locations.add(new Location(id, name, spcx, spcy));
-                i++;
+                //i++;
             }
 
             rs.close();

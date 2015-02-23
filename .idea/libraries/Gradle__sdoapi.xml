@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="sdoapi">
+  <library name="Gradle: sdoapi">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/sdoapi.jar!/" />
     </CLASSES>

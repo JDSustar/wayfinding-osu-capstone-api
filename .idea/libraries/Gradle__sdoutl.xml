@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="sdoutl">
+  <library name="Gradle: sdoutl">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/sdoutl.jar!/" />
     </CLASSES>

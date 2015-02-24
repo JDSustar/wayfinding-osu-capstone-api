@@ -94,7 +94,7 @@ public class SegmentController {
                         }
                     }
                 }
-                //segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
+                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 
             rs.close();

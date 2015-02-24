@@ -1,29 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-<<<<<<< HEAD
-  <component name="EntryPointsManager">
-    <entry_points version="2.0" />
-  </component>
-  <component name="MavenProjectsManager">
-    <option name="originalFiles">
-      <list>
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
-      </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-core/pom.xml" />
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-demo/pom.xml" />
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-dist/pom.xml" />
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-ext/pom.xml" />
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-touchgraph/pom.xml" />
-        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
-      </set>
-    </option>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
-=======
   <component name="ClientPropertiesManager">
     <properties class="javax.swing.AbstractButton">
       <property name="hideActionText" class="java.lang.Boolean" />
@@ -72,6 +48,23 @@
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="IdProvider" IDEtalkID="7116FA0210726F75583608B8381B883A" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-core/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-dist/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-ext/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-touchgraph/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
@@ -178,7 +171,6 @@
       <method />
     </configuration>
     <list size="0" />
->>>>>>> master
   </component>
 </project>
 

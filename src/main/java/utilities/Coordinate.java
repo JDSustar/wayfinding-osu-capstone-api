@@ -6,6 +6,11 @@ package utilities;
 public class Coordinate {
 
     /**
+     *  The max distance for points to be considered as the same point (in feet)
+     */
+    private static double EPSILON = 1.5;
+
+    /**
      * TYPE is for the constructor to differ which data is the original data.
      */
     public static enum TYPE {
@@ -83,6 +88,28 @@ public class Coordinate {
      */
     public double getLongitude(){
         return this.longitude;
+    }
+
+    /**
+     * Calculates the distance between two points in feet.
+     * @param c1 a coordinate
+     * @param c2 another coordinate
+     * @return the double value of the distance between the two points
+     */
+    public static double distance (Coordinate c1, Coordinate c2) {
+        return Math.sqrt(((c1.getEastling() - c2.getEastling()) * (c1.getEastling() - c2.getEastling())) +
+                ((c1.getNorthling() - c2.getNorthling()) * (c1.getNorthling() - c2.getNorthling())));
+    }
+
+    /**
+     * Compares two points by distance, and determines if the points are
+     *   close enough to be considered as the same point.
+     * @param c1 a coordinate
+     * @param c2 another coordinate
+     * @return true if the points are within EPSILON and false otherwise
+     */
+    public static boolean isSamePoint (Coordinate c1, Coordinate c2) {
+        return distance(c1, c2) < EPSILON;
     }
 
 }

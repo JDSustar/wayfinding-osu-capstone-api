@@ -18,7 +18,7 @@ public class SegmentCollection {
         this.segments = segments;
     }
 
-    public List<Segment> getEdges(){
+    public List<Segment> getSegments(){
         return segments;
     }
 }

@@ -1,32 +1,20 @@
 package com;
 
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.sql.*;
-import java.sql.SQLException;
 import java.util.*;
-
-import com.LocationController;
-import com.SegmentController;
 
 @RestController
 public class RouteController {
 
     @RequestMapping("/generateRoute")
     public void generateRoute(double spcX, double spcY) {
-        //Convert the SPC coordinates to lat/long.
 
-        //Get all locations and segments from the database. These are the nodes and edges for the algorithm.
-
-        //Create the graph
-
-        //Use Dijkstra's algorithm to find the shortest path from given starting point and destination
-
-        // Dijkstra's Algorithm
-
-
-//        LocationController lc = new LocationController();
-//        LocationCollection lcc = lc.locations();
+        LocationController lc = new LocationController();
+        LocationCollection lcc = lc.locations();
 
 //        for(Location l : lcc.getLocations()){
 //            System.out.println(l.getId() + "|" + l.getName() + "|" + l.getSpcx() + "|" + l.getSpcy());
@@ -40,11 +28,23 @@ public class RouteController {
 //        }
 
 
+        UndirectedGraph<Location, Segment> ug = new SimpleGraph<Location, Segment>(Segment.class);
 
-        // complete graph generator. build vertex factory coordinate-vertices
+        for(Location l : lcc.getLocations()){
+            ug.addVertex(l);
+        }
 
+        for(Segment s : scc.getSegments()){
+            ug.addEdge(s.getToNode(), s.getFromNode());
+        }
 
+        Location s = new Location(14, "Stillman Hall", 1825399.99612252, 729498.427258271);
+        Location e = new Location(14, "Arps Hall", 1825761.98379103, 729523.554250369);
 
+        List<Segment> l = DijkstraShortestPath.findPathBetween(ug, s, e);
 
+        for(Segment ss : l){
+            System.out.println(ss.getToNode().getName() + " - " +  ss.getFromNode().getName());
+        }
     }
 }

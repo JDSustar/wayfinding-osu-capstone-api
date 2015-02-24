@@ -76,6 +76,7 @@ public class SegmentController {
                                 intermediateNodes.add(loc);
                             }
                         }
+                        //Handle if nodes don't match. Check for node within radius.
                         else
                         {
                             if(index == 0)
@@ -93,7 +94,7 @@ public class SegmentController {
                         }
                     }
                 }
-                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
+                //segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 
             rs.close();

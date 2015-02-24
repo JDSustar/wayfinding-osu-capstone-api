@@ -3,10 +3,10 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
@@ -47,17 +47,14 @@
     <orderEntry type="library" exported="" name="Gradle: logback-core-1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit-4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: hamcrest-core-1.3" level="project" />
-    <orderEntry type="library" exported="" name="sdoapi" level="project" />
-    <orderEntry type="library" exported="" name="sdoutl" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: sdoapi" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: sdoutl" level="project" />
     <orderEntry type="library" exported="" name="jgraph-5.13.0.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-core-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-demo-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-ext-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="jgrapht-ext-0.9.0-uber" level="project" />
     <orderEntry type="library" exported="" name="jgraphx-2.0.0.1" level="project" />
-    <orderEntry type="library" exported="" name="ojdbc61" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: sdoapi" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: sdoutl" level="project" />
   </component>
 </module>
 

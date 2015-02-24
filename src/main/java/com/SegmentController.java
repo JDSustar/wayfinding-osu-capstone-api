@@ -76,6 +76,7 @@ public class SegmentController {
                                 intermediateNodes.add(loc);
                             }
                         }
+                        //Handle if nodes don't match. Check for node within radius.
                         else
                         {
                             if(index == 0)

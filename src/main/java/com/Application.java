@@ -14,7 +14,12 @@ public class Application {
     public static void main(String[] args) {
 
         RouteController rc = new RouteController();
-        rc.generateRoute(0.0, 0.0);
+        Route r = rc.generateRoute();
+
+        for(Node n : r.getRoute())
+        {
+            System.out.println(n.getCoordinate().getLatitude() + ", " + n.getCoordinate().getLongitude());
+        }
 
         //SpringApplication.run(Application.class, args);
     }

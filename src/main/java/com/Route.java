@@ -3,13 +3,13 @@ package com;
 import java.util.List;
 
 public class Route {
-    private final List<Location> route;
+    private final List<Node> route;
 
-    public Route(List<Location> route){
+    public Route(List<Node> route){
         this.route = route;
     }
 
-    public List<Location> getRoute(){
+    public List<Node> getRoute(){
         return route;
     }
 

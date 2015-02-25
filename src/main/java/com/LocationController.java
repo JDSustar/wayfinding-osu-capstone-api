@@ -3,6 +3,8 @@ package com;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utilities.Coordinate;
+
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.*;
@@ -45,7 +47,7 @@ public class LocationController {
                 double spcx = rs.getDouble("X");
                 double spcy = rs.getDouble("Y");
                 //-----------------------------------------------
-                locations.add(new Location(id, name, spcx, spcy));
+                locations.add(new Location(id, name, new Coordinate(spcx, spcy, Coordinate.TYPE.NAD_27)));
                 //i++;
             }
 

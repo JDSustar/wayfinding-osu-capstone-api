@@ -11,15 +11,17 @@ import java.util.List;
 import oracle.spatial.geometry.JGeometry;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utilities.Coordinate;
 
 @RestController
 public class SegmentController {
 
+    List<Segment> segments = new ArrayList<Segment>();
+    List<Node> nodes = new ArrayList<Node>();
+
     @RequestMapping("/segments")
     public SegmentCollection segments()
     {
-        List<Segment> segments = new ArrayList<Segment>();
-
         Statement statement = null;
         Connection conn = null;
         try {
@@ -43,58 +45,50 @@ public class SegmentController {
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
 
-            LocationController lc = new LocationController();
-            LocationCollection locationCollection = lc.locations();
-            List<Location> locations = locationCollection.getLocations();
-
             while (rs.next()) {
                 String streetCrossing = rs.getString("STREETCROSSING");
                 String description = rs.getString("DESCRIPTION");
                 String hazard = rs.getString("POTENTIALHAZARD");
-                //int weight = rs.getInt("");
                 int accessible = rs.getInt("ACCESSIBLE");
                 int id = rs.getInt("ID");
-                double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("GEOMETRY")).getOrdinatesArray();
-                Location startNode = new Location(id,"NOT INITIALIZED",0,0);
-                Location endNode = new Location(id,"NOT INITIALIZED",0,0);
-                List<Location> intermediateNodes = new ArrayList<Location>();
-                for (int index = 0; index < coord.length; index+=2) {
-                    for (Location loc : locations) {
-                        double lat = loc.getLatitude();
-                        double longit = loc.getLongitude();
-                        if (coord[index] == lat && coord[index+1] == longit)
+                double[] ordinatesArray = JGeometry.load((oracle.sql.STRUCT) rs.getObject("GEOMETRY")).getOrdinatesArray();
+                Node startNode = null;
+                Node endNode = null;
+                List<Node> intermediateNodes = new ArrayList<Node>();
+
+                for(int i = 0; i < ordinatesArray.length; i += 2)
+                {
+                    Coordinate coordinate = new Coordinate(ordinatesArray[i], ordinatesArray[i+1], Coordinate.TYPE.NAD_27);
+                    Node newNode = null;
+
+                    for(Node n : nodes)
+                    {
+                        if(Coordinate.isSamePoint(n.getCoordinate(), coordinate))
                         {
-                            if(index == 0)
-                            {
-                                startNode = loc;
-                            }
-                            else if (index+1 == coord.length-1)
-                            {
-                                endNode = loc;
-                            }
-                            else
-                            {
-                                intermediateNodes.add(loc);
-                            }
-                        }
-                        //Handle if nodes don't match. Check for node within radius.
-                        else
-                        {
-                            if(index == 0)
-                            {
-                                startNode = new Location(id,"StartNode",lat,longit);
-                            }
-                            else if (index+1 == coord.length-1)
-                            {
-                                endNode = new Location(id,"EndNode",lat,longit);
-                            }
-                            else
-                            {
-                                intermediateNodes.add(new Location(id,"IntermediateNode",lat,longit));
-                            }
+                            newNode = n;
+                            break;
                         }
                     }
+                    if(newNode == null)
+                    {
+                        newNode = new Node(coordinate);
+                        nodes.add(newNode);
+                    }
+
+                    if(i == 0)
+                    {
+                        startNode = newNode;
+                    }
+                    else if(i == (ordinatesArray.length-2))
+                    {
+                        endNode = newNode;
+                    }
+                    else
+                    {
+                        intermediateNodes.add(newNode);
+                    }
                 }
+
                 segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 

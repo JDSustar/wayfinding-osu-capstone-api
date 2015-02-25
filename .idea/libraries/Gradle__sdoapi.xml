@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="sdoapi">
+  <library name="Gradle: sdoapi">
     <CLASSES>
-      <root url="jar://$USER_HOME$/sdoapi.zip!/" />
+      <root url="jar://$PROJECT_DIR$/lib/sdoapi.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.spatial.geometry.JGeometry;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by Jim on 2/13/2015.
- */
+@RestController
 public class SegmentController {
 
+    @RequestMapping("/segments")
     public SegmentCollection segments()
     {
         List<Segment> segments = new ArrayList<Segment>();
@@ -94,7 +95,7 @@ public class SegmentController {
                         }
                     }
                 }
-                //segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
+                segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
 
             rs.close();

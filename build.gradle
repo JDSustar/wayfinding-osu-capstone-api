@@ -41,9 +41,8 @@ springBoot {
 }
 
 dependencies {
-    compile name: 'ojdbc61'
-    compile name: 'sdoapi'
-    compile name: 'sdoutl'
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile fileTree(dir: 'lib/jgrapht-0.9.0/jgrapht-0.9.0/lib', include: ['*.jar'])
 }
 
 task wrapper(type: Wrapper) {

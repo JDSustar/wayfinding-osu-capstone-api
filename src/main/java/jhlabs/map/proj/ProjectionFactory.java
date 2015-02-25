@@ -393,7 +393,7 @@ public class ProjectionFactory {
 
     public static Projection readProjectionFile(String file, String name) throws IOException {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ProjectionFactory.class.getResourceAsStream("/../../resources/main/" + file)));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ProjectionFactory.class.getResourceAsStream("/" + file)));
         StreamTokenizer t = new StreamTokenizer(reader);
         t.commentChar('#');
         t.ordinaryChars('0', '9');

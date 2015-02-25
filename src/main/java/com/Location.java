@@ -1,20 +1,20 @@
 package com;
 
+import utilities.Coordinate;
+
 public class Location{
     private final int id;
     private final String name;
     private int distanceFromStart;
     private boolean visited;
-    private final double latitude;
-    private final double longitude;
+    private final Coordinate coordinate;
 
-    public Location(int id, String name, double latitude, double longitude) {
+    public Location(int id, String name, Coordinate coordinate) {
         this.id = id;
         this.name = name;
         this.distanceFromStart = Integer.MAX_VALUE;
         this.visited = false;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinate = coordinate;
     }
 
     public int getDistanceFromStart() {
@@ -42,8 +42,6 @@ public class Location{
         this.visited = visited;
     }
 
-    public double getLatitude(){ return latitude; }
-
-    public double getLongitude() {  return longitude; }
+    public Coordinate getCoordinate(){ return this.coordinate; }
 
 }

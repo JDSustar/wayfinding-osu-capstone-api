@@ -16,7 +16,6 @@ public class Segment {
     private final Location endNode;
     private final List<Location> intermediateNodes;
 
-
     public Segment(int weight, int accessible, String streetCrossing, String description,
         String hazard, Location startNode, Location endNode, List<Location> intermediateNodes) {
         this.weight = weight;

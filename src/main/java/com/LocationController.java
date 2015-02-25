@@ -7,6 +7,8 @@ import java.sql.*;
 import java.sql.SQLException;
 import java.util.*;
 
+import utilities.Coordinate;
+
 @RestController
 public class LocationController {
     @RequestMapping("/locations")
@@ -41,12 +43,9 @@ public class LocationController {
             while (rs.next()) {
                 int id = rs.getInt("ID");
                 String name = rs.getString("NAME");
-                //NEED TO CONVERT THESE TO LAT/LONG --------------
                 double spcx = rs.getDouble("X");
                 double spcy = rs.getDouble("Y");
-                //-----------------------------------------------
-                locations.add(new Location(id, name, spcx, spcy));
-                //i++;
+                locations.add(new Location(id, name, new Coordinate(spcx, spcy, Coordinate.TYPE.NAD_27)));
             }
 
             rs.close();

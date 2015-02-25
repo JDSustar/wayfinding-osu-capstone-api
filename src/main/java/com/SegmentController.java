@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.spatial.geometry.JGeometry;
+import utilities.Coordinate;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SegmentController {
 
     @RequestMapping("/segments")
-    public SegmentCollection segments()
+    public SegmentCollection segments(LocationCollection locations)
     {
         List<Segment> segments = new ArrayList<Segment>();
 
@@ -43,9 +45,9 @@ public class SegmentController {
 
             ResultSet rs = statement.executeQuery(edgesSelectStatement);
 
-            LocationController lc = new LocationController();
-            LocationCollection locationCollection = lc.locations();
-            List<Location> locations = locationCollection.getLocations();
+//            LocationController lc = new LocationController();
+//            LocationCollection locationCollection = lc.locations();
+//            List<Location> locations = locationCollection.getLocations();
 
             while (rs.next()) {
                 String streetCrossing = rs.getString("STREETCROSSING");
@@ -55,21 +57,25 @@ public class SegmentController {
                 int accessible = rs.getInt("ACCESSIBLE");
                 int id = rs.getInt("ID");
                 double[] coord = JGeometry.load((oracle.sql.STRUCT) rs.getObject("GEOMETRY")).getOrdinatesArray();
-                Location startNode = new Location(id,"NOT INITIALIZED",0,0);
-                Location endNode = new Location(id,"NOT INITIALIZED",0,0);
+                Location startNode = new Location(id,"NOT INITIALIZED", new Coordinate());
+                Location endNode = new Location(id,"NOT INITIALIZED", new Coordinate());
                 List<Location> intermediateNodes = new ArrayList<Location>();
                 for (int index = 0; index < coord.length; index+=2) {
-                    for (Location loc : locations) {
-                        double lat = loc.getLatitude();
-                        double longit = loc.getLongitude();
-                        if (coord[index] == lat && coord[index+1] == longit)
+                    Coordinate c = new Coordinate(coord[index], coord[index+1], Coordinate.TYPE.NAD_27);
+                    for (Location loc : locations.getLocations()) {
+//                        System.out.println("coord: " + c.getLatitude() + "|" + c.getLongitude());
+//                        System.out.println("locat: " + loc.getLatitude() + "|" + loc.getLongitude());
+//                        System.out.println("--------------------------");
+                        if (Coordinate.isSamePoint(loc.getCoordinate(), c))
                         {
                             if(index == 0)
                             {
+                                //System.out.println("START NODE MATCH");
                                 startNode = loc;
                             }
                             else if (index+1 == coord.length-1)
                             {
+                                //System.out.println("END NODE MATCH");
                                 endNode = loc;
                             }
                             else
@@ -82,15 +88,17 @@ public class SegmentController {
                         {
                             if(index == 0)
                             {
-                                startNode = new Location(id,"StartNode",lat,longit);
+                                //System.out.println("CREATING NEW STARTNODE");
+                                startNode = new Location(id,"StartNode", c);
                             }
                             else if (index+1 == coord.length-1)
                             {
-                                endNode = new Location(id,"EndNode",lat,longit);
+                                //System.out.println("CREATING NEW END NODE");
+                                endNode = new Location(id,"EndNode", c);
                             }
                             else
                             {
-                                intermediateNodes.add(new Location(id,"IntermediateNode",lat,longit));
+                                intermediateNodes.add(new Location(id,"IntermediateNode", c));
                             }
                         }
                     }

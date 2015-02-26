@@ -13,14 +13,6 @@ public class Application {
 
     public static void main(String[] args) {
 
-        RouteController rc = new RouteController();
-        Route r = rc.generateRoute();
-
-        for(Node n : r.getRoute())
-        {
-            System.out.println(n.getCoordinate().getLatitude() + ", " + n.getCoordinate().getLongitude());
-        }
-
-        //SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }

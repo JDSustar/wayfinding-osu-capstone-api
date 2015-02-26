@@ -16,12 +16,17 @@ import utilities.Coordinate;
 @RestController
 public class SegmentController {
 
-    List<Segment> segments = new ArrayList<Segment>();
-    List<Node> nodes = new ArrayList<Node>();
+    static List<Segment> segments = new ArrayList<Segment>();
+    static List<Node> nodes = new ArrayList<Node>();
 
     @RequestMapping("/segments")
     public SegmentCollection segments()
     {
+        if(!segments.isEmpty())
+        {
+            return new SegmentCollection(segments);
+        }
+
         Statement statement = null;
         Connection conn = null;
         try {

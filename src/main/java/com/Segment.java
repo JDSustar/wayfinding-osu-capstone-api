@@ -57,6 +57,8 @@ public class Segment {
         return endNode;
     }
 
+    public List<Location> getIntermediateNodes(){ return intermediateNodes; }
+
     public int getNeighbourIndex(int nodeIndex) {
         if (this.startNode.getId() == nodeIndex) {
             return this.startNode.getId();

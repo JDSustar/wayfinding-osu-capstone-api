@@ -21,7 +21,7 @@ public class SegmentController {
     public SegmentCollection segments(LocationCollection locations)
     {
         List<Segment> segments = new ArrayList<Segment>();
-
+        boolean locfound = false;
         Statement statement = null;
         Connection conn = null;
         try {
@@ -63,49 +63,41 @@ public class SegmentController {
                 for (int index = 0; index < coord.length; index+=2) {
                     Coordinate c = new Coordinate(coord[index], coord[index+1], Coordinate.TYPE.NAD_27);
                     for (Location loc : locations.getLocations()) {
-//                        System.out.println("coord: " + c.getLatitude() + "|" + c.getLongitude());
-//                        System.out.println("locat: " + loc.getLatitude() + "|" + loc.getLongitude());
-//                        System.out.println("--------------------------");
                         if (Coordinate.isSamePoint(loc.getCoordinate(), c))
                         {
                             if(index == 0)
                             {
-                                //System.out.println("START NODE MATCH");
+                                locfound=true;
                                 startNode = loc;
                             }
                             else if (index+1 == coord.length-1)
                             {
-                                //System.out.println("END NODE MATCH");
+                                locfound=true;
                                 endNode = loc;
                             }
-                            else
-                            {
-                                intermediateNodes.add(loc);
-                            }
                         }
-                        //Handle if nodes don't match. Check for node within radius.
                         else
                         {
                             if(index == 0)
                             {
-                                //System.out.println("CREATING NEW STARTNODE");
+                                locfound=true;
                                 startNode = new Location(id,"StartNode", c);
                             }
                             else if (index+1 == coord.length-1)
                             {
-                                //System.out.println("CREATING NEW END NODE");
+                                locfound=true;
                                 endNode = new Location(id,"EndNode", c);
                             }
-                            else
-                            {
-                                intermediateNodes.add(new Location(id,"IntermediateNode", c));
-                            }
                         }
+                    }
+                    if(!locfound){
+                        intermediateNodes.add(new Location(id, "INTERMEDIATENODE", c));
+                    } else {
+                        locfound=false;
                     }
                 }
                 segments.add(new Segment(1, accessible, streetCrossing, description, hazard, startNode, endNode, intermediateNodes));
             }
-
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();

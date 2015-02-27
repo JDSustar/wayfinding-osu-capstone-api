@@ -14,7 +14,7 @@ public class Application {
     public static void main(String[] args) {
 
         RouteController rc = new RouteController();
-        rc.generateRoute(0.0, 0.0);
+        rc.generateRoute(0.0,0.0);
 
         //SpringApplication.run(Application.class, args);
     }

@@ -112,4 +112,14 @@ public class Coordinate {
         return distance(c1, c2) < EPSILON;
     }
 
+    /**
+     * Overides the toString method for pretty output.
+     * @return a string representation of the data within
+     */
+    @Override
+    public String toString () {
+        String nad27 = String.format("Eastling:  %7.5f\nNorthling: %7.5f\n", this.getEastling(), this.getNorthling());
+        String gcs = String.format("Latitude:  %7.5f\nLongitude: %7.5f", this.getLatitude(), this.getLongitude());
+        return nad27 + gcs;
+    }
 }

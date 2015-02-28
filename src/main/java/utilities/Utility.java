@@ -87,10 +87,13 @@ public class Utility {
         // convert database to
         Coordinate c1 = new Coordinate(database[0], database[1], Coordinate.TYPE.NAD_27);
 
-        System.out.format("East: %f\nNorth: %f\nLat: %f\nLong: %f\n\n", c1.getEastling(), c1.getNorthling(), c1.getLatitude(), c1.getLongitude());
+        System.out.println(c1.toString());
+
+
+        System.out.println();
 
         Coordinate c2 = new Coordinate(c1.getLongitude(), c1.getLatitude(), Coordinate.TYPE.GCS);
 
-        System.out.format("East: %f\nNorth: %f\nLat: %f\nLong: %f\n", c2.getEastling(), c2.getNorthling(), c2.getLatitude(), c2.getLongitude());
+        System.out.println(c2.toString());
     }
 }

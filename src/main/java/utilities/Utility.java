@@ -81,7 +81,7 @@ public class Utility {
 
         // Sample coordinates
         double[] database = {
-                0.0,0.0
+                1825399.99612252,729498.427258271
         };
 
         // convert database to

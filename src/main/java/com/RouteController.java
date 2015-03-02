@@ -29,31 +29,34 @@ public class RouteController {
 //            System.out.println(s.getId() + "|" + s.getNode1().getSpcx() + "|" + s.getNode1().getSpcy());
 //        }
 
-//        UndirectedGraph<Location, Segment> ug = new SimpleGraph<Location, Segment>(Segment.class);
-//
-//        for(Segment s : scc.getSegments()){
-//            ug.addVertex(s.getToNode());
-//            ug.addVertex(s.getFromNode());
-//            for(int i=0; i<s.getIntermediateNodes().size(); i++){
-//                ug.addVertex(s.getIntermediateNodes().get(i));
-//            }
-//        }
-//
-//        for(Segment s : scc.getSegments()){
-//            if(s.getIntermediateNodes().size() == 0){
-//                ug.addEdge(s.getToNode(), s.getFromNode());
-//            } else{
-//                ug.addEdge(s.getToNode(), s.getIntermediateNodes().get(0));
-//                ug.addEdge(s.getFromNode(), s.getIntermediateNodes().get(s.getIntermediateNodes().size()-1));
-//                for( int i=0; i<s.getIntermediateNodes().size()-1; i++){
-//                    ug.addEdge(s.getIntermediateNodes().get(i), s.getIntermediateNodes().get(i+1));
-//                }
-//            }
-//
-//        }
-//
+        UndirectedGraph<Location, Segment> ug = new SimpleGraph<Location, Segment>(Segment.class);
+
+        for(Segment s : scc.getSegments()){
+            ug.addVertex(s.getToNode());
+            for(int i=0; i<s.getIntermediateNodes().size(); i++){
+                ug.addVertex(s.getIntermediateNodes().get(i));
+            }
+            ug.addVertex(s.getFromNode());
+        }
+
+        for(Segment s : scc.getSegments()){
+            if(s.getIntermediateNodes().size() == 0){
+                ug.addEdge(s.getToNode(), s.getFromNode(), s);
+            } else if(s.getIntermediateNodes().size() == 1){
+                ug.addEdge(s.getToNode(), s.getIntermediateNodes().get(0), s);
+                ug.addEdge(s.getIntermediateNodes().get(0), s.getFromNode(), s);
+            } else{
+                ug.addEdge(s.getToNode(), s.getIntermediateNodes().get(0), s);
+                for( int i=0; i<s.getIntermediateNodes().size()-1; i++){
+                    ug.addEdge(s.getIntermediateNodes().get(i), s.getIntermediateNodes().get(i+1), s);
+                }
+                ug.addEdge(s.getIntermediateNodes().get(s.getIntermediateNodes().size()-1), s.getFromNode(), s);
+            }
+
+        }
+
 //        Location s = new Location(10588, "Stillman Hall", new Coordinate(1825399.99612252, 729498.427258271, Coordinate.TYPE.NAD_27));
-//        Location e = new Location(10591, "Arps Hall", new Coordinate(1825761.98379103,729523.554250369, Coordinate.TYPE.NAD_27));
+//        Location e = new Location(10618, "McPherson Chemical Lab", new Coordinate(1825003.48526739,729679.340209628, Coordinate.TYPE.NAD_27));
 //
 //        List<Segment> l = DijkstraShortestPath.findPathBetween(ug, s, e);
 //

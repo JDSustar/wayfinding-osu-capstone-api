@@ -12,6 +12,7 @@ import oracle.spatial.geometry.JGeometry;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utilities.Coordinate;
+import utilities.Utility;
 
 @RestController
 public class SegmentController {
@@ -30,19 +31,7 @@ public class SegmentController {
         Statement statement = null;
         Connection conn = null;
         try {
-
-            try {
-                Class.forName("oracle.jdbc.OracleDriver");
-            }
-            catch(ClassNotFoundException ex) {
-                System.out.println("Error: unable to load driver class!");
-                System.exit(1);
-            }
-
-            String URL = "jdbc:oracle:thin:@54.200.238.22:1521:xe";
-            String USER = "system";
-            String PASS = "Tibs2015";
-            conn = DriverManager.getConnection(URL, USER, PASS);
+            conn = Utility.getConnection();
 
             statement = conn.createStatement();
             String edgesSelectStatement = "SELECT A.ID, A.STREETCROSSING, A.DESCRIPTION, A.POTENTIALHAZARD," +

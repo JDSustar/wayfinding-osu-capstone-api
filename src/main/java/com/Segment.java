@@ -58,12 +58,12 @@ public class Segment {
 
     public int getAccessible() {return accessible;}
 
-    public Node getToNode()
+    public Node getStartNode()
     {
         return startNode;
     }
 
-    public Node getFromNode()
+    public Node getEndNode()
     {
         return endNode;
     }

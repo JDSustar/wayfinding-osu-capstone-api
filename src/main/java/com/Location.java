@@ -2,27 +2,20 @@ package com;
 
 import utilities.Coordinate;
 
-public class Location{
-    private final int id;
-    private final String name;
-    private int distanceFromStart;
-    private boolean visited;
-    private final Coordinate coordinate;
+public class Location extends Node{
+    private String name;
 
-    public Location(int id, String name, Coordinate coordinate) {
+    private int id;
+
+    public Location(int id, String name, Coordinate coord)
+    {
+        super(coord);
         this.id = id;
         this.name = name;
-        this.distanceFromStart = Integer.MAX_VALUE;
-        this.visited = false;
-        this.coordinate = coordinate;
     }
 
-    public int getDistanceFromStart() {
-        return distanceFromStart;
-    }
-
-    public void setDistanceFromStart(int distanceFromStart) {
-        this.distanceFromStart = distanceFromStart;
+    public int getId() {
+        return id;
     }
 
     public String getName()
@@ -30,18 +23,9 @@ public class Location{
         return name;
     }
 
-    public int getId() {return id;}
-
-    public boolean isVisited()
+    @Override
+    public String toString()
     {
-        return this.visited;
+        return "Location: " + this.name + " -- Lat: " + this.getCoordinate().getLatitude() + " Long: " + this.getCoordinate().getLongitude();
     }
-
-    public void setVisited(boolean visited)
-    {
-        this.visited = visited;
-    }
-
-    public Coordinate getCoordinate(){ return this.coordinate; }
-
 }

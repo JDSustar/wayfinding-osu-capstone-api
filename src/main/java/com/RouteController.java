@@ -1,67 +1,108 @@
 package com;
 
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.Pseudograph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.*;
-
 import utilities.Coordinate;
 
+import java.util.*;
+
 @RestController
-public class RouteController {
+public class RouteController
+{
+    static Pseudograph<Node, Segment> ug = null;
 
+    /**
+     * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination
+     * provided via the request parameters.
+     *
+     * @param from The desired origin of the path (as the location's unique id)
+     * @param to The desired destination of the path (as the location's unique id)
+     * @return A Route of the shortest path.
+     */
     @RequestMapping("/generateRoute")
-    public void generateRoute(double spcX, double spcY) {
+    public Route generateRoute(@RequestParam(value="from")int from, @RequestParam(value="to")int to)
+    {
+        if (ug == null)
+        {
+            // Get the segments, as we need them to add them to the graph
+            SegmentController sc = new SegmentController();
+            SegmentCollection scc = sc.segments();
 
+            ug = new Pseudograph<Node, Segment>(Segment.class);
+
+            for (Segment s : scc.getSegments())
+            {
+                ug.addVertex(s.getEndNode());
+                ug.addVertex(s.getStartNode());
+                ug.addEdge(s.getEndNode(), s.getStartNode(), s);
+            }
+        }
+
+        // Get the locations so that we can loop through them
         LocationController lc = new LocationController();
         LocationCollection lcc = lc.locations();
 
-//        for(Location l : lcc.getLocations()){
-//            System.out.println(l.getId() + "|" + l.getName() + "|" + l.getLatitude() + "|" + l.getLongitude());
-//        }
+        // Initialize the start and end locations
+        Location startLocation = null;
+        Location endLocation = null;
 
-        SegmentController sc = new SegmentController();
-        SegmentCollection scc = sc.segments(lcc);
-
-//        for(Segment s : scc.getSegments()){
-//            System.out.println(s.getId() + "|" + s.getNode1().getSpcx() + "|" + s.getNode1().getSpcy());
-//        }
-
-        UndirectedGraph<Location, Segment> ug = new SimpleGraph<Location, Segment>(Segment.class);
-
-        for(Segment s : scc.getSegments()){
-            ug.addVertex(s.getToNode());
-            for(int i=0; i<s.getIntermediateNodes().size(); i++){
-                ug.addVertex(s.getIntermediateNodes().get(i));
+        // Find the start and end location object instances based on the unique IDs given
+        for(Location l : lcc.getLocations())
+        {
+            if(l.getId() == from)
+            {
+                startLocation = l;
             }
-            ug.addVertex(s.getFromNode());
+            else if (l.getId() == to)
+            {
+                endLocation = l;
+            }
         }
 
-        for(Segment s : scc.getSegments()){
-            if(s.getIntermediateNodes().size() == 0){
-                ug.addEdge(s.getToNode(), s.getFromNode(), s);
-            } else if(s.getIntermediateNodes().size() == 1){
-                ug.addEdge(s.getToNode(), s.getIntermediateNodes().get(0), s);
-                ug.addEdge(s.getIntermediateNodes().get(0), s.getFromNode(), s);
-            } else{
-                ug.addEdge(s.getToNode(), s.getIntermediateNodes().get(0), s);
-                for( int i=0; i<s.getIntermediateNodes().size()-1; i++){
-                    ug.addEdge(s.getIntermediateNodes().get(i), s.getIntermediateNodes().get(i+1), s);
-                }
-                ug.addEdge(s.getIntermediateNodes().get(s.getIntermediateNodes().size()-1), s.getFromNode(), s);
-            }
+        // Initialize the start and end nodes
+        Node startNode = null;
+        Node endNode = null;
 
+        // Find the instances of the start and end nodes in the graph based on the
+        // coordinates of the start and end locations.
+        for(Node n : ug.vertexSet())
+        {
+            if(Coordinate.isSamePoint(n.getCoordinate(), startLocation.getCoordinate()))
+            {
+                startNode = n;
+            }
+            else if(Coordinate.isSamePoint(n.getCoordinate(), endLocation.getCoordinate()))
+            {
+                endNode = n;
+            }
         }
 
-//        Location s = new Location(10588, "Stillman Hall", new Coordinate(1825399.99612252, 729498.427258271, Coordinate.TYPE.NAD_27));
-//        Location e = new Location(10618, "McPherson Chemical Lab", new Coordinate(1825003.48526739,729679.340209628, Coordinate.TYPE.NAD_27));
-//
-//        List<Segment> l = DijkstraShortestPath.findPathBetween(ug, s, e);
-//
-//        for(Segment ss : l){
-//            System.out.println(ss.getToNode().getName() + " - " +  ss.getFromNode().getName());
-//        }
+        // Calculate the shortest path
+        List<Segment> shortestPath = DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+
+        List<Node> routeNodes = new ArrayList<Node>();
+
+        // Foreach segment on the shortest path
+        for (Segment s : shortestPath)
+        {
+            // add the first node
+            routeNodes.add(s.getStartNode());
+
+            // and all intermediate nodes
+            for (Node n : s.getIntermediateNodes())
+            {
+                routeNodes.add(n);
+            }
+
+            // But do not add the final node, because it will be the same as the starting node of the next segment
+        }
+
+        // Add the final node only from the last segment
+        routeNodes.add(shortestPath.get(shortestPath.size() - 1).getEndNode());
+
+        return new Route(routeNodes);
     }
 }

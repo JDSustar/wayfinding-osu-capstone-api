@@ -9,13 +9,28 @@ import com.RouteController;
 
 @ComponentScan
 @EnableAutoConfiguration
-public class Application {
+public class Application
+{
+    public static void main(String[] args)
+    {
+        SpringApplication.run(Application.class, args);
 
-    public static void main(String[] args) {
+        System.out.println("***PLEASE WAIT WHILE API SERVER INITIALIZES...");
 
-        RouteController rc = new RouteController();
-        rc.generateRoute(0.0, 0.0);
+        System.out.print("***Loading Locations...");
 
-        //SpringApplication.run(Application.class, args);
+        LocationController lcc = new LocationController();
+        lcc.locations();
+
+        System.out.println(" Done.");
+
+        System.out.print("***Loading Segments...");
+
+        SegmentController scc = new SegmentController();
+        scc.segments();
+
+        System.out.println(" Done.");
+
+        System.out.println("***API SERVER READY***");
     }
 }

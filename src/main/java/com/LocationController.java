@@ -11,10 +11,18 @@ import java.util.*;
 
 @RestController
 public class LocationController {
+
+    private static List<Location> locations = null;
+
     @RequestMapping("/locations")
     public LocationCollection locations() {
 
-        List<Location> locations = new ArrayList<Location>();
+        if(locations != null)
+        {
+            return new LocationCollection(locations);
+        }
+
+        locations = new ArrayList<Location>();
 
         Statement statement = null;
         Connection conn = null;
@@ -28,27 +36,22 @@ public class LocationController {
                 System.exit(1);
             }
 
-            String URL = "jdbc:oracle:thin:@cseosuwintest.cloudapp.net:1521:xe";
+            String URL = "jdbc:oracle:thin:@54.200.238.22:1521:xe";
             String USER = "system";
             String PASS = "Tibs2015";
             conn = DriverManager.getConnection(URL, USER, PASS);
 
             statement = conn.createStatement();
-            //String locationsSelectStatement = "SELECT UNIQUE name FROM ROUTENODE";
-            String locationsSelectStatement = "SELECT A.ID, A.NAME, T.X, T.Y FROM ROUTENODE A, TABLE(SDO_UTIL.GETVERTICES(A.GEOM)) T";
+            String locationsSelectStatement = "SELECT A.ID, A.NAME, T.X, T.Y FROM ROUTENODE A, TABLE(SDO_UTIL.GETVERTICES(A.GEOM)) T WHERE A.ISDOOR = 1";
 
             ResultSet rs = statement.executeQuery(locationsSelectStatement);
-            //int i = 0;
 
             while (rs.next()) {
                 int id = rs.getInt("ID");
                 String name = rs.getString("NAME");
-                //NEED TO CONVERT THESE TO LAT/LONG --------------
                 double spcx = rs.getDouble("X");
                 double spcy = rs.getDouble("Y");
-                //-----------------------------------------------
                 locations.add(new Location(id, name, new Coordinate(spcx, spcy, Coordinate.TYPE.NAD_27)));
-                //i++;
             }
 
             rs.close();

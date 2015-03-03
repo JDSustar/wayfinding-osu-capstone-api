@@ -39,7 +39,7 @@ public class SegmentController {
                 System.exit(1);
             }
 
-            String URL = "jdbc:oracle:thin:@cseosuwintest.cloudapp.net:1521:xe";
+            String URL = "jdbc:oracle:thin:@54.200.238.22:1521:xe";
             String USER = "system";
             String PASS = "Tibs2015";
             conn = DriverManager.getConnection(URL, USER, PASS);

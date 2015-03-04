@@ -48,6 +48,23 @@
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="IdProvider" IDEtalkID="7116FA0210726F75583608B8381B883A" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-core/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-dist/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-ext/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/jgrapht-touchgraph/pom.xml" />
+        <option value="$PROJECT_DIR$/../jgrapht-master/jgrapht-master/pom.xml" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />

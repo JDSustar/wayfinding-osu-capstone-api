@@ -1,12 +1,21 @@
 package com;
 
-public class Location{
-    private final int id;
-    private final String name;
+import utilities.Coordinate;
 
-    public Location(int id, String name) {
+public class Location extends Node{
+    private String name;
+
+    private int id;
+
+    public Location(int id, String name, Coordinate coord)
+    {
+        super(coord);
         this.id = id;
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName()
@@ -14,5 +23,9 @@ public class Location{
         return name;
     }
 
-    public int getId() {return id;}
+    @Override
+    public String toString()
+    {
+        return "Location: " + this.name + " -- Lat: " + this.getCoordinate().getLatitude() + " Long: " + this.getCoordinate().getLongitude();
+    }
 }

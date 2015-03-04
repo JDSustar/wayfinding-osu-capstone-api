@@ -1,6 +1,9 @@
 package utilities;
 
 import java.awt.geom.Point2D;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Created by tjf3191 on 2/16/15.
@@ -26,11 +29,12 @@ public class Utility {
     /**
      * Class method for converting a nad27 measure of eastling and northling
      * values to GCS coordinates.
+     *
      * @param eastling  the X value in feet
      * @param northling the Y value in feet
-     * @return          returns a double point, at [0] is longitude and [1] is latitude
+     * @return returns a double point, at [0] is longitude and [1] is latitude
      */
-    public static final double[] Nad27toGCS (double eastling, double northling) {
+    public static final double[] Nad27toGCS(double eastling, double northling) {
 
         // convert from feet to meters
         eastling = eastling * SURVEY_2_METER;
@@ -77,23 +81,18 @@ public class Utility {
         return new double[]{dst.getX(), dst.getY()};
     }
 
-    public static void main (String[] args) {
+    public static Connection getConnection() throws SQLException
+    {
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Error: unable to load driver class!");
+            System.exit(1);
+        }
 
-        // Sample coordinates
-        double[] database = {
-                1825399.99612252,729498.427258271
-        };
-
-        // convert database to
-        Coordinate c1 = new Coordinate(database[0], database[1], Coordinate.TYPE.NAD_27);
-
-        System.out.println(c1.toString());
-
-
-        System.out.println();
-
-        Coordinate c2 = new Coordinate(c1.getLongitude(), c1.getLatitude(), Coordinate.TYPE.GCS);
-
-        System.out.println(c2.toString());
+        String URL = "jdbc:oracle:thin:@54.200.238.22:1521:xe";
+        String USER = "system";
+        String PASS = "Tibs2015";
+        return DriverManager.getConnection(URL, USER, PASS);
     }
 }

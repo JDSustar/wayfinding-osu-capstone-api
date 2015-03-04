@@ -29,6 +29,8 @@ public class Segment {
         this.startNode = startNode;
         this.endNode = endNode;
         this.intermediateNodes = intermediateNodes;
+
+        calculateLength();
     }
 
     public Segment(int weight, int accessible, String streetCrossing, String description,
@@ -40,6 +42,8 @@ public class Segment {
         this.hazard = hazard;
         this.startNode = startNode;
         this.endNode = endNode;
+
+        calculateLength();
     }
 
     public String getStreetCrossing() {

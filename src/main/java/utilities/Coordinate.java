@@ -1,5 +1,7 @@
 package utilities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by tjf3191 on 2/16/15.
  */
@@ -65,6 +67,7 @@ public class Coordinate {
     /**
      * @return the eastling value
      */
+    @JsonIgnore
     public double getEastling(){
         return this.eastling;
     }
@@ -72,6 +75,7 @@ public class Coordinate {
     /**
      * @return the northling value
      */
+    @JsonIgnore
     public double getNorthling(){
         return this.northling;
     }

@@ -124,6 +124,6 @@ public class RouteController
             }
         }
 
-        return new Route(routeNodes);
+        return new Route(routeNodes, startLocation, endLocation);
     }
 }

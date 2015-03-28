@@ -13,6 +13,13 @@ import java.util.*;
 public class RouteController
 {
     static Pseudograph<Node, Segment> ug = null;
+    Location startLocation = null;
+    Location endLocation = null;
+    LocationCollection lcc = null;
+    Node startNode = null;
+    Node endNode = null;
+    List<Segment> shortestPath = null;
+    List<Node> routeNodes = new ArrayList<Node>();
 
     /**
      * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination
@@ -25,6 +32,82 @@ public class RouteController
     @RequestMapping("/generateRoute")
     public Route generateRoute(@RequestParam(value="from")int from, @RequestParam(value="to")int to)
     {
+        // Check to see if the graph has been loaded to the server
+        graphLoadCheck();
+
+        // Get the locations so that we can loop through them
+        lcc = loadLocations();
+
+        // Find the start and end location object instances based on the unique IDs given
+        for(Location l : lcc.getLocations())
+        {
+            if(l.getId() == from)
+            {
+                startLocation = l;
+            }
+            else if (l.getId() == to)
+            {
+                endLocation = l;
+            }
+        }
+
+        // Find the start and end nodes in the graph
+        findStartEndNodes();
+
+        // Calculate the shortest path
+        shortestPath = findShortestPath();
+
+        // Create a list of nodes based on the list of shortest path segments
+        createRoute();
+
+        // Return the list of nodes as a route object
+        return new Route(routeNodes);
+    }
+
+    /**
+     * Generates a route using Dijkstra Shortest Path algorithm from the current location to the
+     * destination provided via the request parameters.
+     *
+     * @param destID The desired destination of the path(as the location's unique id)
+     * @param currLat The Latitude value of the current location
+     * @param currLong The Longitude value of the current location
+     * @return A Route of the shortest path.
+     */
+    @RequestMapping("/generateRoute")
+    public Route generateRoute(@RequestParam(value="dest")int destID, @RequestParam(value="currlat")double currLat, @RequestParam(value="currlong")double currLong){
+
+        // Check to see if the graph has been loaded to the server
+        graphLoadCheck();
+
+        // Get the locations so that we can loop through them
+        lcc = loadLocations();
+
+        // Find the end location object instance based on the unique ID given
+        for(Location l : lcc.getLocations())
+        {
+            if(l.getId() == destID)
+            {
+                endLocation = l;
+            }
+        }
+
+        // Find the start and end nodes in the graph
+        findStartEndNodes(new Coordinate(currLat, currLong, Coordinate.TYPE.GCS));
+
+        // Calculate the shortest path
+        shortestPath = findShortestPath();
+
+        // Create a list of nodes based on the list of shortest path segments
+        createRoute();
+
+        // Return the list of nodes as a route object
+        return new Route(routeNodes);
+    }
+
+    /**
+     * Loads the graph to the server if it has not been loaded already
+     */
+    private void graphLoadCheck(){
         if (ug == null)
         {
             // Get the segments, as we need them to add them to the graph
@@ -40,34 +123,20 @@ public class RouteController
                 ug.addEdge(s.getEndNode(), s.getStartNode(), s);
             }
         }
+    }
 
-        // Get the locations so that we can loop through them
-        LocationController lc = new LocationController();
-        LocationCollection lcc = lc.locations();
+    /**
+     * Loads the locations to the server
+     */
+    private LocationCollection loadLocations(){
+        return new LocationController().locations();
+    }
 
-        // Initialize the start and end locations
-        Location startLocation = null;
-        Location endLocation = null;
-
-        // Find the start and end location object instances based on the unique IDs given
-        for(Location l : lcc.getLocations())
-        {
-            if(l.getId() == from)
-            {
-                startLocation = l;
-            }
-            else if (l.getId() == to)
-            {
-                endLocation = l;
-            }
-        }
-
-        // Initialize the start and end nodes
-        Node startNode = null;
-        Node endNode = null;
-
-        // Find the instances of the start and end nodes in the graph based on the
-        // coordinates of the start and end locations.
+    /**
+     * Find the instances of the start and end nodes in the graph based on the coordinates of the
+     * start and end locations
+     */
+    private void findStartEndNodes(){
         for(Node n : ug.vertexSet())
         {
             if(Coordinate.isSamePoint(n.getCoordinate(), startLocation.getCoordinate()))
@@ -79,12 +148,39 @@ public class RouteController
                 endNode = n;
             }
         }
+    }
 
-        // Calculate the shortest path
-        List<Segment> shortestPath = DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+    /**
+     * Find the instances of the start and end nodes in the graph based on the coordinates of the
+     * start and end locations
+     * @param currentLocation Start Location
+     */
+    private void findStartEndNodes(Coordinate currentLocation){
+        for(Node n : ug.vertexSet())
+        {
+            if(Coordinate.isSamePoint(n.getCoordinate(), currentLocation))
+            {
+                startNode = n;
+            }
+            else if(Coordinate.isSamePoint(n.getCoordinate(), endLocation.getCoordinate()))
+            {
+                endNode = n;
+            }
+        }
+    }
 
-        List<Node> routeNodes = new ArrayList<Node>();
+    /**
+     * Find the shortest path
+     * @return A list of segments of the shortest path
+     */
+    private List<Segment> findShortestPath(){
+        return DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+    }
 
+    /**
+     * Creates the shortest path route as a list of nodes that is to be returned to the application
+     */
+    private void createRoute(){
         // Foreach segment on the shortest path
         for (Segment s : shortestPath)
         {
@@ -102,7 +198,5 @@ public class RouteController
 
         // Add the final node only from the last segment
         routeNodes.add(shortestPath.get(shortestPath.size() - 1).getEndNode());
-
-        return new Route(routeNodes);
     }
 }

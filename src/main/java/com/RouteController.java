@@ -36,7 +36,7 @@ public class RouteController
         graphLoadCheck();
 
         // Get the locations so that we can loop through them
-        lcc = loadLocations();
+        loadLocations();
 
         // Find the start and end location object instances based on the unique IDs given
         for(Location l : lcc.getLocations())
@@ -80,7 +80,7 @@ public class RouteController
         graphLoadCheck();
 
         // Get the locations so that we can loop through them
-        lcc = loadLocations();
+        loadLocations();
 
         // Find the end location object instance based on the unique ID given
         for(Location l : lcc.getLocations())
@@ -128,8 +128,8 @@ public class RouteController
     /**
      * Loads the locations to the server
      */
-    private LocationCollection loadLocations(){
-        return new LocationController().locations();
+    private void loadLocations(){
+        lcc = new LocationController().locations();
     }
 
     /**

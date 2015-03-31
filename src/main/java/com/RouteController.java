@@ -13,13 +13,14 @@ import java.util.*;
 public class RouteController
 {
     static Pseudograph<Node, Segment> ug = null;
-    Location startLocation = null;
-    Location endLocation = null;
-    LocationCollection lcc = null;
-    Node startNode = null;
-    Node endNode = null;
-    List<Segment> shortestPath = null;
-    List<Node> routeNodes = new ArrayList<Node>();
+    private Location startLocation = null;
+    private Location endLocation = null;
+    private LocationCollection lcc = null;
+    private Node startNode = null;
+    private Node endNode = null;
+    private List<Segment> shortestPath = null;
+    private List<Node> routeNodes = new ArrayList<Node>();
+    private double radius = 0.0002840909; // 1.5 feet
 
     /**
      * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination
@@ -73,7 +74,7 @@ public class RouteController
      * @param currLong The Longitude value of the current location
      * @return A Route of the shortest path.
      */
-    @RequestMapping("/generateRoute")
+    @RequestMapping("/generateRoutecurrent")
     public Route generateRoute(@RequestParam(value="dest")int destID, @RequestParam(value="currlat")double currLat, @RequestParam(value="currlong")double currLong){
 
         // Check to see if the graph has been loaded to the server
@@ -167,6 +168,10 @@ public class RouteController
                 endNode = n;
             }
         }
+
+        if(startNode == null){
+            findClosestNode(currentLocation);
+        }
     }
 
     /**
@@ -198,5 +203,22 @@ public class RouteController
 
         // Add the final node only from the last segment
         routeNodes.add(shortestPath.get(shortestPath.size() - 1).getEndNode());
+    }
+
+    private void findClosestNode(Coordinate currentLocation){
+        double EPSILON = radius;
+
+        while(startNode == null) {
+            for (Node n : ug.vertexSet()) {
+                if (Coordinate.distance(n.getCoordinate(), currentLocation) < EPSILON) {
+                    startNode = n;
+                    break;
+                }
+            }
+
+            if(startNode == null){
+                EPSILON+=radius;
+            }
+        }
     }
 }

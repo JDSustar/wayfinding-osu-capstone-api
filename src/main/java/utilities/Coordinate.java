@@ -8,7 +8,7 @@ public class Coordinate {
     /**
      *  The max distance for points to be considered as the same point (in miles)
      */
-    private static double EPSILON = 0.0002840909;
+    private static double EPSILON = 0.0002840909; // 1.5 feet
 
     /**
      * TYPE is for the constructor to differ which data is the original data.

@@ -56,8 +56,8 @@ public class Coordinate {
             this.longitude = results[0];
 
         } else if (type == TYPE.GCS) {
-            this.latitude = y;
-            this.longitude = x;
+            this.latitude = x;
+            this.longitude = y;
             results = Utility.GCStoNad27(this.latitude, this.longitude);
             this.eastling = results[1];
             this.northling = results[0];

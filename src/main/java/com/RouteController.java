@@ -187,6 +187,8 @@ public class RouteController
      * Creates the shortest path route as a list of nodes that is to be returned to the application
      */
     private void createRoute(){
+        routeNodes.add(startNode);
+
         // Foreach segment on the shortest path
         for (Segment s : shortestPath)
         {

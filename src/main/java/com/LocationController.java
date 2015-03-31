@@ -97,9 +97,9 @@ public class LocationController
     public Location getLocation(@PathVariable int id)
     {
         LocationCollection lcc = locations();
-        for(Location l : lcc.getLocations())
+        for (Location l : lcc.getLocations())
         {
-            if(l.getId() == id)
+            if (l.getId() == id)
             {
                 return l;
             }

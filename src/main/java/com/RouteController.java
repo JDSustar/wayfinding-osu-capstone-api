@@ -2,6 +2,7 @@ package com;
 
 import org.jgrapht.graph.Pseudograph;
 import org.jgrapht.alg.DijkstraShortestPath;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,7 +63,7 @@ public class RouteController
         createRoute();
 
         // Return the list of nodes as a route object
-        return new Route(routeNodes);
+        return new Route(routeNodes, startLocation, endLocation);
     }
 
     /**
@@ -74,7 +75,7 @@ public class RouteController
      * @param currLong The Longitude value of the current location
      * @return A Route of the shortest path.
      */
-    @RequestMapping("/generateRoutecurrent")
+    @RequestMapping("/generateRouteCurrent")
     public Route generateRoute(@RequestParam(value="dest")int destID, @RequestParam(value="currlat")double currLat, @RequestParam(value="currlong")double currLong){
 
         // Check to see if the graph has been loaded to the server
@@ -102,7 +103,7 @@ public class RouteController
         createRoute();
 
         // Return the list of nodes as a route object
-        return new Route(routeNodes);
+        return new Route(routeNodes, null, endLocation);
     }
 
     /**
@@ -189,20 +190,37 @@ public class RouteController
         // Foreach segment on the shortest path
         for (Segment s : shortestPath)
         {
-            // add the first node
-            routeNodes.add(s.getStartNode());
-
-            // and all intermediate nodes
+            // check to see if the start is the same as the one already in the list
+            if(s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
+            {
+                // and all intermediate nodes in normal order
             for (Node n : s.getIntermediateNodes())
             {
                 routeNodes.add(n);
             }
 
-            // But do not add the final node, because it will be the same as the starting node of the next segment
+                // Add end node
+                routeNodes.add(s.getEndNode());
         }
+            else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
+            {
+                // Everything has to be added in reverse order.
+                ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
+                Collections.reverse(reversedIntermediateNodes);
 
-        // Add the final node only from the last segment
-        routeNodes.add(shortestPath.get(shortestPath.size() - 1).getEndNode());
+                for(Node n : reversedIntermediateNodes)
+                {
+                    routeNodes.add(n);
+                }
+
+                // Add "start" node (which is really the end node because the segment is backwards)
+                routeNodes.add(s.getStartNode());
+            }
+            else
+            {
+                throw new AssertionError("Route Not Continuous.");
+            }
+        }
     }
 
     private void findClosestNode(Coordinate currentLocation){

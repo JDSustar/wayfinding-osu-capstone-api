@@ -1,5 +1,7 @@
 package utilities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by tjf3191 on 2/16/15.
  */
@@ -65,6 +67,7 @@ public class Coordinate {
     /**
      * @return the eastling value
      */
+    @JsonIgnore
     public double getEastling(){
         return this.eastling;
     }
@@ -72,6 +75,7 @@ public class Coordinate {
     /**
      * @return the northling value
      */
+    @JsonIgnore
     public double getNorthling(){
         return this.northling;
     }
@@ -121,4 +125,14 @@ public class Coordinate {
         return distance(c1, c2) < EPSILON;
     }
 
+    /**
+     * Overides the toString method for pretty output.
+     * @return a string representation of the data within
+     */
+    @Override
+    public String toString () {
+        String nad27 = String.format("Eastling:  %7.5f\nNorthling: %7.5f\n", this.getEastling(), this.getNorthling());
+        String gcs = String.format("Latitude:  %7.5f\nLongitude: %7.5f", this.getLatitude(), this.getLongitude());
+        return nad27 + gcs;
+    }
 }

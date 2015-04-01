@@ -21,7 +21,7 @@ public class RouteController
     private Node endNode = null;
     private List<Segment> shortestPath = null;
     private List<Node> routeNodes = new ArrayList<Node>();
-    private double radius = 0.0002840909; // 1.5 feet
+    private double radius = 1.5; // 1.5 feet
 
     /**
      * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination

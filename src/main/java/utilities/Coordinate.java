@@ -10,7 +10,7 @@ public class Coordinate {
     /**
      *  The max distance for points to be considered as the same point (in miles)
      */
-    private static double EPSILON = 0.0002840909; // 1.5 feet
+    private static double EPSILON = 1.5; // 1.5 feet
 
     /**
      * TYPE is for the constructor to differ which data is the original data.
@@ -59,8 +59,8 @@ public class Coordinate {
             this.latitude = x;
             this.longitude = y;
             results = Utility.GCStoNad27(this.latitude, this.longitude);
-            this.eastling = results[1];
-            this.northling = results[0];
+            this.eastling = results[0];
+            this.northling = results[1];
         }
     }
 
@@ -101,17 +101,8 @@ public class Coordinate {
      * @return the double value of the distance between the two points
      */
     public static double distance (Coordinate c1, Coordinate c2) {
-        double earthRadius = 3958.75; // in miles, change to 6371 for kilometer output
-        double dLat = Math.toRadians(c2.getLatitude()-c1.getLatitude());
-        double dLng = Math.toRadians(c2.getLongitude()-c1.getLongitude());
-        double sindLat = Math.sin(dLat / 2);
-        double sindLng = Math.sin(dLng / 2);
-        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
-                * Math.cos(Math.toRadians(c1.getLatitude())) * Math.cos(Math.toRadians(c2.getLatitude()));
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double dist = earthRadius * c;
-        return dist; // output distance, in MILES
-
+        return Math.sqrt(((c1.getEastling() - c2.getEastling()) * (c1.getEastling() - c2.getEastling())) +
+                ((c1.getNorthling() - c2.getNorthling()) * (c1.getNorthling() - c2.getNorthling())));
     }
 
     /**

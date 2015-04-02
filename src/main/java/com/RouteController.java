@@ -225,6 +225,10 @@ public class RouteController
         }
     }
 
+    /**
+     * Finds the closest node in the graph given a user's current location
+     * @param currentLocation a user's current location
+     */
     private void findClosestNode(Coordinate currentLocation){
         double EPSILON = radius;
 

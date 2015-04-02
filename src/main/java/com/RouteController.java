@@ -23,6 +23,16 @@ public class RouteController
     private List<Node> routeNodes = new ArrayList<Node>();
     private double radius = 1.5; // 1.5 feet
 
+    private void clearAll()
+    {
+        startLocation = null;
+        endLocation = null;
+        startNode = null;
+        endNode = null;
+        shortestPath = null;
+        routeNodes = new ArrayList<Node>();
+    }
+
     /**
      * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination
      * provided via the request parameters.
@@ -34,6 +44,8 @@ public class RouteController
     @RequestMapping("/generateRoute")
     public Route generateRoute(@RequestParam(value="from")int from, @RequestParam(value="to")int to)
     {
+        clearAll();
+
         // Check to see if the graph has been loaded to the server
         graphLoadCheck();
 
@@ -77,6 +89,8 @@ public class RouteController
      */
     @RequestMapping("/generateRouteCurrent")
     public Route generateRoute(@RequestParam(value="dest")int destID, @RequestParam(value="currlat")double currLat, @RequestParam(value="currlong")double currLong){
+
+        clearAll();
 
         // Check to see if the graph has been loaded to the server
         graphLoadCheck();
@@ -187,6 +201,8 @@ public class RouteController
      * Creates the shortest path route as a list of nodes that is to be returned to the application
      */
     private void createRoute(){
+        routeNodes.clear();
+
         routeNodes.add(startNode);
 
         // Foreach segment on the shortest path

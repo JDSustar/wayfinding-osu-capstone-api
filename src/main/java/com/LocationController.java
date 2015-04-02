@@ -12,6 +12,8 @@ import java.sql.*;
 import java.sql.SQLException;
 import java.util.*;
 
+import utilities.Coordinate;
+
 @RestController
 public class LocationController
 {

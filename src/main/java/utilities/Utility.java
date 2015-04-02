@@ -78,7 +78,7 @@ public class Utility {
         // use library to convert coordinates to nad27
         NAD_27.transform(src, dst);
 
-        return new double[]{dst.getX(), dst.getY()};
+        return new double[]{dst.getX() / SURVEY_2_METER, dst.getY() / SURVEY_2_METER};
     }
 
     public static Connection getConnection() throws SQLException

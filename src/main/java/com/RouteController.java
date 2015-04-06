@@ -71,11 +71,17 @@ public class RouteController
         // Calculate the shortest path
         shortestPath = findShortestPath();
 
-        // Create a list of nodes based on the list of shortest path segments
-        createRoute();
+        if(shortestPath != null)
+        {
+            // Create a list of nodes based on the list of shortest path segments
+            createRoute();
 
-        // Return the list of nodes as a route object
-        return new Route(routeNodes, startLocation, endLocation);
+            // Return the list of nodes as a route object
+            return new Route(routeNodes, startLocation, endLocation);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
@@ -110,14 +116,25 @@ public class RouteController
         // Find the start and end nodes in the graph
         findStartEndNodes(new Coordinate(currLat, currLong, Coordinate.TYPE.GCS));
 
+        if(startNode == null)
+        {
+            return null; // Starting node could not be found within 300 feet of current location. Route not available.
+        }
+
         // Calculate the shortest path
         shortestPath = findShortestPath();
 
-        // Create a list of nodes based on the list of shortest path segments
-        createRoute();
+        if(shortestPath != null)
+        {
+            // Create a list of nodes based on the list of shortest path segments
+            createRoute();
 
-        // Return the list of nodes as a route object
-        return new Route(routeNodes, null, endLocation);
+            // Return the list of nodes as a route object
+            return new Route(routeNodes, new Location(-1, "Current Location", startNode.getCoordinate()), endLocation);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
@@ -254,6 +271,11 @@ public class RouteController
 
             if(startNode == null){
                 EPSILON+=radius;
+            }
+
+            if(EPSILON > 300)
+            {
+                break;
             }
         }
     }

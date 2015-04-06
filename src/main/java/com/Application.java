@@ -24,6 +24,13 @@ public class Application
 
         System.out.println(" Done.");
 
+        System.out.print("***Loading Buildings...");
+
+        BuildingController bcc = new BuildingController();
+        bcc.buildings();
+
+        System.out.println(" Done.");
+
         System.out.print("***Loading Segments...");
 
         SegmentController scc = new SegmentController();

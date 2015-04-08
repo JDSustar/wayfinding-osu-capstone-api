@@ -42,88 +42,100 @@ public class RouteController
             }
         }
 
-        // Get the locations so that we can loop through them
-        LocationController lc = new LocationController();
-        LocationCollection lcc = lc.locations();
+        // Get the buildings so that we can loop through them
+        BuildingController bc = new BuildingController();
+        BuildingCollection bcc = bc.buildings();
 
-        // Initialize the start and end locations
-        Location startLocation = null;
-        Location endLocation = null;
+        // Initialize the start and end buildings
+        Building startBuilding = null;
+        Building endBuilding = null;
 
         // Find the start and end location object instances based on the unique IDs given
-        for(Location l : lcc.getLocations())
+        for(Building b : bcc.getBuildings())
         {
-            if(l.getId() == from)
+            if(b.getBuildingId() == from)
             {
-                startLocation = l;
+                startBuilding = b;
             }
-            else if (l.getId() == to)
+            else if (b.getBuildingId() == to)
             {
-                endLocation = l;
+                endBuilding = b;
             }
         }
 
-        // Initialize the start and end nodes
+        // Initialize the start and end nodes as well as the bestRoute.
         Node startNode = null;
         Node endNode = null;
+        Route bestRoute = null;
 
         // Find the instances of the start and end nodes in the graph based on the
         // coordinates of the start and end locations.
-        for(Node n : ug.vertexSet())
-        {
-            if(Coordinate.isSamePoint(n.getCoordinate(), startLocation.getCoordinate()))
-            {
-                startNode = n;
-            }
-            else if(Coordinate.isSamePoint(n.getCoordinate(), endLocation.getCoordinate()))
-            {
-                endNode = n;
-            }
-        }
-
-        // Calculate the shortest path
-        List<Segment> shortestPath = DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
-
-        List<Node> routeNodes = new ArrayList<Node>();
-
-        // Add first node
-        routeNodes.add(startNode);
-
-        // Foreach segment on the shortest path
-        for (Segment s : shortestPath)
-        {
-            // check to see if the start is the same as the one already in the list
-            if(s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
-            {
-                // and all intermediate nodes in normal order
-                for (Node n : s.getIntermediateNodes())
-                {
-                    routeNodes.add(n);
+        for (int i = 0; i < startBuilding.getDoors().size(); i++) {
+            for (int j = 0; j < endBuilding.getDoors().size(); j++) {
+                for (Node n : ug.vertexSet()) {
+                    if (Coordinate.isSamePoint(n.getCoordinate(), startBuilding.getDoors().get(i).getCoordinate())) {
+                        startNode = n;
+                    } else if (Coordinate.isSamePoint(n.getCoordinate(), endBuilding.getDoors().get(j).getCoordinate())) {
+                        endNode = n;
+                    }
                 }
 
-                // Add end node
-                routeNodes.add(s.getEndNode());
-            }
-            else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
-            {
-                // Everything has to be added in reverse order.
-                ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
-                Collections.reverse(reversedIntermediateNodes);
+                // Calculate the shortest path
+                List<Segment> shortestPath = DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
 
-                for(Node n : reversedIntermediateNodes)
+                List<Node> routeNodes = new ArrayList<Node>();
+
+                // Add first node
+                routeNodes.add(startNode);
+
+                // Foreach segment on the shortest path
+                for (Segment s : shortestPath)
                 {
-                    routeNodes.add(n);
+                    // check to see if the start is the same as the one already in the list
+                    if(s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
+                    {
+                        // and all intermediate nodes in normal order
+                        for (Node n : s.getIntermediateNodes())
+                        {
+                            routeNodes.add(n);
+                        }
+
+                        // Add end node
+                        routeNodes.add(s.getEndNode());
+                    }
+                    else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
+                    {
+                        // Everything has to be added in reverse order.
+                        ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
+                        Collections.reverse(reversedIntermediateNodes);
+
+                        for(Node n : reversedIntermediateNodes)
+                        {
+                            routeNodes.add(n);
+                        }
+
+                        // Add "start" node (which is really the end node because the segment is backwards)
+                        routeNodes.add(s.getStartNode());
+                    }
+                    else
+                    {
+                        throw new AssertionError("Route Not Continuous.");
+                    }
                 }
 
-                // Add "start" node (which is really the end node because the segment is backwards)
-                routeNodes.add(s.getStartNode());
-            }
-            else
-            {
-                throw new AssertionError("Route Not Continuous.");
+                Route newRoute = new Route(routeNodes, startBuilding.getDoors().get(i), endBuilding.getDoors().get(i));
+                if (bestRoute != null){
+                    if (newRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
+                    {
+                        bestRoute = newRoute;
+                    }
+                }
+                else
+                {
+                    bestRoute = newRoute;
+                }
             }
         }
-
-        return new Route(routeNodes, startLocation, endLocation);
+        return bestRoute;
     }
 }

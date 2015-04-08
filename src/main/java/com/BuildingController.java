@@ -67,7 +67,9 @@ public class BuildingController {
                 int id = rs.getInt("ID");
                 int buildingId = Integer.parseInt(rs.getString("BUILDINGID"));
                 String name = rs.getString("NAME");
-                buildings.add(new Building(doors, name, id, buildingId));
+                if (doors.size() > 0) {
+                    buildings.add(new Building(doors, name, id, buildingId));
+                }
             }
             rs.close();
         }

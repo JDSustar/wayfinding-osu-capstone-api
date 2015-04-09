@@ -3,7 +3,6 @@ package com;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import utilities.Coordinate;
 import utilities.Utility;
@@ -53,14 +52,14 @@ public class BuildingController {
 
             while (rs.next())
             {
-                List<Location> doors = new ArrayList<Location>();
+                List<Door> doors = new ArrayList<Door>();
                 doorStatement = connection.createStatement();
                 String doorsSelectStatement = "SELECT A.ID, A.NAME, A.BUILDINGID, T.X, T.Y  FROM ROUTENODE A, TABLE(SDO_UTIL.GETVERTICES(A.GEOM)) T " +
                         "WHERE A.ISDOOR = 1 AND A.BUILDINGID = " + rs.getString("BUILDINGID");
                 ResultSet doorsRs = doorStatement.executeQuery(doorsSelectStatement);
                 while (doorsRs.next())
                 {
-                    doors.add(new Location(doorsRs.getInt("ID"), doorsRs.getString("NAME"),
+                    doors.add(new Door(doorsRs.getInt("ID"), doorsRs.getString("NAME"),
                             new Coordinate(doorsRs.getDouble("X"),doorsRs.getDouble("Y"),Coordinate.TYPE.NAD_27)));
                 }
                 doorsRs.close();

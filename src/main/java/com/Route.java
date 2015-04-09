@@ -5,15 +5,15 @@ import utilities.Coordinate;
 import java.util.List;
 
 public class Route {
-    private Location startLocation;
-    private Location endLocation;
+    private Door startDoor;
+    private Door endDoor;
     private double lengthInFeet;
     private final List<Node> route;
 
-    public Route(List<Node> route, Location start, Location end){
+    public Route(List<Node> route, Door start, Door end){
         this.route = route;
-        startLocation = start;
-        endLocation = end;
+        startDoor = start;
+        endDoor = end;
 
         double length = 0;
         for(int i = 0; i < route.size() - 1; i++)
@@ -28,12 +28,12 @@ public class Route {
         return route;
     }
 
-    public Location getStartLocation() {
-        return startLocation;
+    public Door getStartDoor() {
+        return startDoor;
     }
 
-    public Location getEndLocation() {
-        return endLocation;
+    public Door getEndDoor() {
+        return endDoor;
     }
 
     public double getLengthInFeet() {

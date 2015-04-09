@@ -43,8 +43,8 @@ public class RouteController
         {
             for (int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
             {
-                Location startDoor = startBuilding.getDoors().get(startIndex);
-                Location endDoor = startBuilding.getDoors().get(endIndex);
+                Door startDoor = startBuilding.getDoors().get(startIndex);
+                Door endDoor = startBuilding.getDoors().get(endIndex);
 
                 Node startNode = findNodeForDoor(startDoor);
                 Node endNode = findNodeForDoor(endDoor);
@@ -98,13 +98,13 @@ public class RouteController
 
         for(int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
         {
-            Location endDoor = endBuilding.getDoors().get(endIndex);
+            Door endDoor = endBuilding.getDoors().get(endIndex);
             Node endNode = findNodeForDoor(endDoor);
 
             List<Segment> shortestPath = findShortestPath(startNode, endNode);
 
             List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
-            Route currentRoute = new Route(currentRouteNodes, new Location(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
+            Route currentRoute = new Route(currentRouteNodes, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
 
             if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
             {
@@ -149,7 +149,7 @@ public class RouteController
      * Find the instances of the start and end nodes in the graph based on the coordinates of the
      * start and end locations
      */
-    private Node findNodeForDoor(Location door)
+    private Node findNodeForDoor(Door door)
     {
         for (Node n : ug.vertexSet())
         {

@@ -17,13 +17,6 @@ public class Application
 
         System.out.println("***PLEASE WAIT WHILE API SERVER INITIALIZES...");
 
-        System.out.print("***Loading Locations...");
-
-        LocationController lcc = new LocationController();
-        lcc.locations();
-
-        System.out.println(" Done.");
-
         System.out.print("***Loading Buildings...");
 
         BuildingController bcc = new BuildingController();

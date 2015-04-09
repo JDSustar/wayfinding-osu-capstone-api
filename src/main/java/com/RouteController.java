@@ -44,7 +44,7 @@ public class RouteController
             for (int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
             {
                 Door startDoor = startBuilding.getDoors().get(startIndex);
-                Door endDoor = startBuilding.getDoors().get(endIndex);
+                Door endDoor = endBuilding.getDoors().get(endIndex);
 
                 Node startNode = findNodeForDoor(startDoor);
                 Node endNode = findNodeForDoor(endDoor);

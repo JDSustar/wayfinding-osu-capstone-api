@@ -19,9 +19,9 @@ public class BuildingCollection {
         this.buildings = buildings;
     }
 
-    public List<Building> getBuildings() {
-        return buildings;
-    }
+        public List<Building> getBuildings() {
+            return buildings;
+        }
 
     public void add(int i, Building b){
         if(!buildings.contains(b)){
@@ -33,7 +33,7 @@ public class BuildingCollection {
     {
         for(Building b : buildings)
         {
-            if(b.getId() == id)
+            if(b.getBuildingId() == id)
             {
                 return b;
             }

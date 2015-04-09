@@ -2,7 +2,6 @@ package com;
 
 import org.jgrapht.graph.Pseudograph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,17 +13,112 @@ import java.util.*;
 public class RouteController
 {
     static Pseudograph<Node, Segment> ug = null;
+    private BuildingCollection bcc = null;
+    private double radius = 1.5; // 1.5 feet
 
     /**
      * Generates a route using Dijkstra Shortest Path algorithm from the origin to the destination
      * provided via the request parameters.
      *
      * @param from The desired origin of the path (as the location's unique id)
-     * @param to The desired destination of the path (as the location's unique id)
+     * @param to   The desired destination of the path (as the location's unique id)
      * @return A Route of the shortest path.
      */
     @RequestMapping("/generateRoute")
-    public Route generateRoute(@RequestParam(value="from")int from, @RequestParam(value="to")int to)
+    public Route generateRoute(@RequestParam(value = "from") int from, @RequestParam(value = "to") int to)
+    {
+        // Check to see if the graph has been loaded to the server
+        graphLoadCheck();
+
+        // Get the locations so that we can loop through them
+        loadBuildings();
+
+        Building startBuilding = bcc.getBuilding(from);
+        Building endBuilding = bcc.getBuilding(to);
+
+        // Find the start and end nodes in the graph
+        Route bestRoute = null;
+
+        for (int startIndex = 0; startIndex < startBuilding.getDoors().size(); startIndex++)
+        {
+            for (int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
+            {
+                Location startDoor = startBuilding.getDoors().get(startIndex);
+                Location endDoor = startBuilding.getDoors().get(endIndex);
+
+                Node startNode = findNodeForDoor(startDoor);
+                Node endNode = findNodeForDoor(endDoor);
+
+                // Calculate the shortest path
+                List<Segment> shortestPath = findShortestPath(startNode, endNode);
+
+                List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
+                Route currentRoute = new Route(currentRouteNodes, startDoor, endDoor);
+
+                if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
+                {
+                    bestRoute = currentRoute;
+                }
+            }
+        }
+
+        return bestRoute;
+    }
+
+    /**
+     * Generates a route using Dijkstra Shortest Path algorithm from the current location to the
+     * destination provided via the request parameters.
+     *
+     * @param destID   The desired destination of the path(as the location's unique id)
+     * @param currLat  The Latitude value of the current location
+     * @param currLong The Longitude value of the current location
+     * @return A Route of the shortest path.
+     */
+    @RequestMapping("/generateRouteCurrent")
+    public Route generateRoute(@RequestParam(value = "dest") int destID, @RequestParam(value = "currlat") double currLat, @RequestParam(value = "currlong") double currLong)
+    {
+        // Check to see if the graph has been loaded to the server
+        graphLoadCheck();
+
+        // Get the locations so that we can loop through them
+        loadBuildings();
+
+        // Find the end location object instance based on the unique ID given
+        Building endBuilding = bcc.getBuilding(destID);
+
+        // Find the start and end nodes in the graph
+        Node startNode = findClosestNode(new Coordinate(currLat, currLong, Coordinate.TYPE.GCS));
+
+        if (startNode == null)
+        {
+            return null; // Starting node could not be found within 300 feet of current location. Route not available.
+        }
+
+        Route bestRoute = null;
+
+        for(int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
+        {
+            Location endDoor = endBuilding.getDoors().get(endIndex);
+            Node endNode = findNodeForDoor(endDoor);
+
+            List<Segment> shortestPath = findShortestPath(startNode, endNode);
+
+            List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
+            Route currentRoute = new Route(currentRouteNodes, new Location(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
+
+            if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
+            {
+                bestRoute = currentRoute;
+            }
+        }
+
+        return bestRoute;
+    }
+
+    /**
+     * Loads the graph to the server if it has not been loaded already
+     */
+    private void graphLoadCheck()
     {
         if (ug == null)
         {
@@ -41,101 +135,116 @@ public class RouteController
                 ug.addEdge(s.getEndNode(), s.getStartNode(), s);
             }
         }
+    }
 
-        // Get the buildings so that we can loop through them
-        BuildingController bc = new BuildingController();
-        BuildingCollection bcc = bc.buildings();
+    /**
+     * Loads the locations to the server
+     */
+    private void loadBuildings()
+    {
+        bcc = new BuildingController().buildings();
+    }
 
-        // Initialize the start and end buildings
-        Building startBuilding = null;
-        Building endBuilding = null;
-
-        // Find the start and end location object instances based on the unique IDs given
-        for(Building b : bcc.getBuildings())
+    /**
+     * Find the instances of the start and end nodes in the graph based on the coordinates of the
+     * start and end locations
+     */
+    private Node findNodeForDoor(Location door)
+    {
+        for (Node n : ug.vertexSet())
         {
-            if(b.getBuildingId() == from)
+            if (Coordinate.isSamePoint(n.getCoordinate(), door.getCoordinate()))
             {
-                startBuilding = b;
-            }
-            else if (b.getBuildingId() == to)
-            {
-                endBuilding = b;
+                return n;
             }
         }
 
-        // Initialize the start and end nodes as well as the bestRoute.
-        Node startNode = null;
-        Node endNode = null;
-        Route bestRoute = null;
+        return null;
+    }
 
-        // Find the instances of the start and end nodes in the graph based on the
-        // coordinates of the start and end locations.
-        for (int i = 0; i < startBuilding.getDoors().size(); i++) {
-            for (int j = 0; j < endBuilding.getDoors().size(); j++) {
-                for (Node n : ug.vertexSet()) {
-                    if (Coordinate.isSamePoint(n.getCoordinate(), startBuilding.getDoors().get(i).getCoordinate())) {
-                        startNode = n;
-                    } else if (Coordinate.isSamePoint(n.getCoordinate(), endBuilding.getDoors().get(j).getCoordinate())) {
-                        endNode = n;
-                    }
-                }
+    /**
+     * Find the shortest path
+     *
+     * @return A list of segments of the shortest path
+     */
+    private List<Segment> findShortestPath(Node startNode, Node endNode)
+    {
+        return DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+    }
 
-                // Calculate the shortest path
-                List<Segment> shortestPath = DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+    /**
+     * Creates the shortest path route as a list of nodes that is to be returned to the application
+     */
+    private List<Node> createRouteNodes(List<Segment> path, Node startNode)
+    {
+        List<Node> routeNodes = new ArrayList<Node>();
 
-                List<Node> routeNodes = new ArrayList<Node>();
+        routeNodes.add(startNode);
 
-                // Add first node
-                routeNodes.add(startNode);
-
-                // Foreach segment on the shortest path
-                for (Segment s : shortestPath)
+        // Foreach segment on the shortest path
+        for (Segment s : path)
+        {
+            // check to see if the start is the same as the one already in the list
+            if (s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
+            {
+                // and all intermediate nodes in normal order
+                for (Node n : s.getIntermediateNodes())
                 {
-                    // check to see if the start is the same as the one already in the list
-                    if(s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
-                    {
-                        // and all intermediate nodes in normal order
-                        for (Node n : s.getIntermediateNodes())
-                        {
-                            routeNodes.add(n);
-                        }
-
-                        // Add end node
-                        routeNodes.add(s.getEndNode());
-                    }
-                    else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
-                    {
-                        // Everything has to be added in reverse order.
-                        ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
-                        Collections.reverse(reversedIntermediateNodes);
-
-                        for(Node n : reversedIntermediateNodes)
-                        {
-                            routeNodes.add(n);
-                        }
-
-                        // Add "start" node (which is really the end node because the segment is backwards)
-                        routeNodes.add(s.getStartNode());
-                    }
-                    else
-                    {
-                        throw new AssertionError("Route Not Continuous.");
-                    }
+                    routeNodes.add(n);
                 }
 
-                Route newRoute = new Route(routeNodes, startBuilding.getDoors().get(i), endBuilding.getDoors().get(i));
-                if (bestRoute != null){
-                    if (newRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
-                    {
-                        bestRoute = newRoute;
-                    }
-                }
-                else
+                // Add end node
+                routeNodes.add(s.getEndNode());
+            } else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
+            {
+                // Everything has to be added in reverse order.
+                ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
+                Collections.reverse(reversedIntermediateNodes);
+
+                for (Node n : reversedIntermediateNodes)
                 {
-                    bestRoute = newRoute;
+                    routeNodes.add(n);
                 }
+
+                // Add "start" node (which is really the end node because the segment is backwards)
+                routeNodes.add(s.getStartNode());
+            } else
+            {
+                throw new AssertionError("Route Not Continuous.");
             }
         }
-        return bestRoute;
+
+        return routeNodes;
+    }
+
+    private Node findClosestNode(Coordinate currentLocation)
+    {
+        Node closestNode = null;
+
+        double EPSILON = radius;
+
+        while (closestNode == null)
+        {
+            for (Node n : ug.vertexSet())
+            {
+                if (Coordinate.distance(n.getCoordinate(), currentLocation) < EPSILON)
+                {
+                    closestNode = n;
+                    break;
+                }
+            }
+
+            if (closestNode == null)
+            {
+                EPSILON += radius;
+            }
+
+            if (EPSILON > 300)
+            {
+                break;
+            }
+        }
+
+        return closestNode;
     }
 }

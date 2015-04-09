@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Coordinate {
 
     /**
-     *  The max distance for points to be considered as the same point (in feet)
+     *  The max distance for points to be considered as the same point (in miles)
      */
-    private static double EPSILON = 1.5;
+    private static double EPSILON = 1.5; // 1.5 feet
 
     /**
      * TYPE is for the constructor to differ which data is the original data.
@@ -56,11 +56,11 @@ public class Coordinate {
             this.longitude = results[0];
 
         } else if (type == TYPE.GCS) {
-            this.latitude = y;
-            this.longitude = x;
+            this.latitude = x;
+            this.longitude = y;
             results = Utility.GCStoNad27(this.latitude, this.longitude);
-            this.eastling = results[1];
-            this.northling = results[0];
+            this.eastling = results[0];
+            this.northling = results[1];
         }
     }
 

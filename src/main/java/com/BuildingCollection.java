@@ -28,4 +28,17 @@ public class BuildingCollection {
             buildings.add(i, b);
         }
     }
+
+    public Building getBuilding(int id)
+    {
+        for(Building b : buildings)
+        {
+            if(b.getId() == id)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
 }

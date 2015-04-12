@@ -2,12 +2,12 @@ package com;
 
 import utilities.Coordinate;
 
-public class Location extends Node{
+public class Door extends Node{
     private String name;
 
     private int id;
 
-    public Location(int id, String name, Coordinate coord)
+    public Door(int id, String name, Coordinate coord)
     {
         super(coord);
         this.id = id;

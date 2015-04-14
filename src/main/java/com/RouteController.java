@@ -57,8 +57,8 @@ public class RouteController
                 // Calculate the shortest path
                 List<Segment> shortestPath = findShortestPath(startNode, endNode);
 
-                List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
-                Route currentRoute = new Route(currentRouteNodes, startDoor, endDoor);
+                List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
+                Route currentRoute = new Route(routeCoordinates, startDoor, endDoor);
 
                 if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
                 {
@@ -113,8 +113,8 @@ public class RouteController
 
             List<Segment> shortestPath = findShortestPath(startNode, endNode);
 
-            List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
-            Route currentRoute = new Route(currentRouteNodes, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
+            List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
+            Route currentRoute = new Route(routeCoordinates, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
 
             if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
             {
@@ -185,27 +185,27 @@ public class RouteController
     /**
      * Creates the shortest path route as a list of nodes that is to be returned to the application
      */
-    private List<Node> createRouteNodes(List<Segment> path, Node startNode)
+    private List<Coordinate> createRouteCoordinates(List<Segment> path, Node startNode)
     {
-        List<Node> routeNodes = new ArrayList<Node>();
+        List<Coordinate> routeCoordinates = new ArrayList<Coordinate>();
 
-        routeNodes.add(startNode);
+        routeCoordinates.add(startNode.getCoordinate());
 
         // Foreach segment on the shortest path
         for (Segment s : path)
         {
             // check to see if the start is the same as the one already in the list
-            if (s.getStartNode() == routeNodes.get(routeNodes.size() - 1))
+            if (s.getStartNode().getCoordinate() == routeCoordinates.get(routeCoordinates.size() - 1))
             {
                 // and all intermediate nodes in normal order
                 for (Node n : s.getIntermediateNodes())
                 {
-                    routeNodes.add(n);
+                    routeCoordinates.add(n.getCoordinate());
                 }
 
                 // Add end node
-                routeNodes.add(s.getEndNode());
-            } else if (s.getEndNode() == routeNodes.get(routeNodes.size() - 1))
+                routeCoordinates.add(s.getEndNode().getCoordinate());
+            } else if (s.getEndNode().getCoordinate() == routeCoordinates.get(routeCoordinates.size() - 1))
             {
                 // Everything has to be added in reverse order.
                 ArrayList<Node> reversedIntermediateNodes = new ArrayList<Node>(s.getIntermediateNodes());
@@ -213,18 +213,18 @@ public class RouteController
 
                 for (Node n : reversedIntermediateNodes)
                 {
-                    routeNodes.add(n);
+                    routeCoordinates.add(n.getCoordinate());
                 }
 
                 // Add "start" node (which is really the end node because the segment is backwards)
-                routeNodes.add(s.getStartNode());
+                routeCoordinates.add(s.getStartNode().getCoordinate());
             } else
             {
                 throw new AssertionError("Route Not Continuous.");
             }
         }
 
-        return routeNodes;
+        return routeCoordinates;
     }
 
     private Node findClosestNode(Coordinate currentLocation)

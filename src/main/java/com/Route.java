@@ -8,9 +8,9 @@ public class Route {
     private Door startDoor;
     private Door endDoor;
     private double lengthInFeet;
-    private final List<Node> route;
+    private final List<Coordinate> route;
 
-    public Route(List<Node> route, Door start, Door end){
+    public Route(List<Coordinate> route, Door start, Door end){
         this.route = route;
         startDoor = start;
         endDoor = end;
@@ -18,13 +18,13 @@ public class Route {
         double length = 0;
         for(int i = 0; i < route.size() - 1; i++)
         {
-            length += Coordinate.distance(route.get(i).getCoordinate(), route.get(i+1).getCoordinate());
+            length += Coordinate.distance(route.get(i), route.get(i + 1));
         }
 
         lengthInFeet = length;
     }
 
-    public List<Node> getRoute(){
+    public List<Coordinate> getRoute(){
         return route;
     }
 

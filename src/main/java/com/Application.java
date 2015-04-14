@@ -33,6 +33,16 @@ public class Application
         sw = new StopWatch();
         sw.start();
 
+        System.out.print("***Loading Tours...");
+
+        TourController tcc = new TourController();
+        tcc.tours();
+
+        sw.stop();
+        System.out.println(" Done. Completed in " + sw.getTotalTimeSeconds() + " seconds.");
+        sw = new StopWatch();
+        sw.start();
+
         System.out.print("***Loading Segments...");
 
         SegmentController scc = new SegmentController();

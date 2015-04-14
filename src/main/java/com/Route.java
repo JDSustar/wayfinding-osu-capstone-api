@@ -9,19 +9,21 @@ public class Route {
     private Door endDoor;
     private double lengthInFeet;
     private final List<Node> route;
+    private String errorMsg;
 
-    public Route(List<Node> route, Door start, Door end){
+    public Route(List<Node> route, Door start, Door end, String errorMsg){
         this.route = route;
         startDoor = start;
         endDoor = end;
 
         double length = 0;
-        for(int i = 0; i < route.size() - 1; i++)
-        {
-            length += Coordinate.distance(route.get(i).getCoordinate(), route.get(i+1).getCoordinate());
+        if (route != null) {
+            for (int i = 0; i < route.size() - 1; i++) {
+                length += Coordinate.distance(route.get(i).getCoordinate(), route.get(i + 1).getCoordinate());
+            }
         }
-
         lengthInFeet = length;
+        this.errorMsg = errorMsg;
     }
 
     public List<Node> getRoute(){
@@ -39,4 +41,7 @@ public class Route {
     public double getLengthInFeet() {
         return lengthInFeet;
     }
+
+    public String getErrorMsg() { return errorMsg; }
+
 }

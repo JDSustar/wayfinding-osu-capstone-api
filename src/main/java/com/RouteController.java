@@ -49,6 +49,11 @@ public class RouteController
                 Node startNode = findNodeForDoor(startDoor);
                 Node endNode = findNodeForDoor(endDoor);
 
+                if(startNode == null || endNode == null)
+                {
+                    continue;
+                }
+
                 // Calculate the shortest path
                 List<Segment> shortestPath = findShortestPath(startNode, endNode);
 
@@ -100,6 +105,11 @@ public class RouteController
         {
             Door endDoor = endBuilding.getDoors().get(endIndex);
             Node endNode = findNodeForDoor(endDoor);
+
+            if(endNode == null)
+            {
+                continue;
+            }
 
             List<Segment> shortestPath = findShortestPath(startNode, endNode);
 

@@ -13,6 +13,7 @@ import java.util.*;
 public class RouteController
 {
     static Pseudograph<Node, Segment> ug = null;
+    private static Pseudograph<Node, Segment> wheelchairGraph = null;
     private BuildingCollection bcc = null;
     private double radius = 1.5; // 1.5 feet
 
@@ -130,19 +131,27 @@ public class RouteController
      */
     private void graphLoadCheck()
     {
-        if (ug == null)
+        if (ug == null || wheelchairGraph == null)
         {
             // Get the segments, as we need them to add them to the graph
             SegmentController sc = new SegmentController();
             SegmentCollection scc = sc.segments();
 
             ug = new Pseudograph<Node, Segment>(Segment.class);
+            wheelchairGraph = new Pseudograph<Node, Segment>(Segment.class);
 
             for (Segment s : scc.getSegments())
             {
                 ug.addVertex(s.getEndNode());
                 ug.addVertex(s.getStartNode());
                 ug.addEdge(s.getEndNode(), s.getStartNode(), s);
+
+                if(s.getAccessible() == 1)
+                {
+                    wheelchairGraph.addVertex(s.getEndNode());
+                    wheelchairGraph.addVertex(s.getStartNode());
+                    wheelchairGraph.addEdge(s.getEndNode(), s.getStartNode(), s);
+                }
             }
         }
     }

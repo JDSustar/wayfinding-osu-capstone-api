@@ -58,6 +58,11 @@ public class RouteController
                 // Calculate the shortest path
                 List<Segment> shortestPath = findShortestPath(startNode, endNode, wheelchair);
 
+                if(shortestPath == null)
+                {
+                    continue;
+                }
+
                 List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
                 Route currentRoute = new Route(routeCoordinates, startDoor, endDoor);
 
@@ -113,6 +118,11 @@ public class RouteController
             }
 
             List<Segment> shortestPath = findShortestPath(startNode, endNode, wheelchair);
+
+            if(shortestPath == null)
+            {
+                continue;
+            }
 
             List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
             Route currentRoute = new Route(routeCoordinates, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);

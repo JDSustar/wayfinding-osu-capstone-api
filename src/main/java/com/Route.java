@@ -11,7 +11,7 @@ public class Route {
     private final List<Node> route;
     private String errorMsg;
 
-    public Route(List<Node> route, Door start, Door end, String errorMsg){
+    public Route(List<Node> route, Door start, Door end){
         this.route = route;
         startDoor = start;
         endDoor = end;
@@ -23,6 +23,12 @@ public class Route {
             }
         }
         lengthInFeet = length;
+    }
+
+
+    public Route(List<Node> route, Door start, Door end, String errorMsg)
+    {
+        this(route, start, end);
         this.errorMsg = errorMsg;
     }
 

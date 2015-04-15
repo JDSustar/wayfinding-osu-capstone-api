@@ -58,7 +58,7 @@ public class RouteController
                 List<Segment> shortestPath = findShortestPath(startNode, endNode);
                 if (shortestPath != null) {
                     List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
-                    Route currentRoute = new Route(currentRouteNodes, startDoor, endDoor, null);
+                    Route currentRoute = new Route(currentRouteNodes, startDoor, endDoor);
 
                     if (bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet()) {
                         bestRoute = currentRoute;
@@ -98,7 +98,7 @@ public class RouteController
 
         if (startNode == null)
         {
-            return new Route(null, null, null, "A starting node could not be found for your current location."); // Starting node could not be found within 300 feet of current location. Route not available.
+            return new Route(null, null, null, "You are not close enough to paths on campus to calculate a route using your current location."); // Starting node could not be found within 300 feet of current location. Route not available.
         }
 
         Route bestRoute = null;
@@ -116,12 +116,15 @@ public class RouteController
             List<Segment> shortestPath = findShortestPath(startNode, endNode);
 
             List<Node> currentRouteNodes = createRouteNodes(shortestPath, startNode);
-            Route currentRoute = new Route(currentRouteNodes, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor, null);
+            Route currentRoute = new Route(currentRouteNodes, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
 
             if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
             {
                 bestRoute = currentRoute;
             }
+        }
+        if (bestRoute == null){
+            return new Route(null, null, null, "No route exists between your current location and " + endBuilding.getName() + ".");
         }
         return bestRoute;
     }

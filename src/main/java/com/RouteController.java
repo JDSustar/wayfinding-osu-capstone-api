@@ -26,7 +26,7 @@ public class RouteController
      * @return A Route of the shortest path.
      */
     @RequestMapping("/generateRoute")
-    public Route generateRoute(@RequestParam(value = "from") int from, @RequestParam(value = "to") int to)
+    public Route generateRoute(@RequestParam(value = "from") int from, @RequestParam(value = "to") int to, @RequestParam(value = "wheelchair", defaultValue = "false") boolean wheelchair)
     {
         // Check to see if the graph has been loaded to the server
         graphLoadCheck();
@@ -47,8 +47,8 @@ public class RouteController
                 Door startDoor = startBuilding.getDoors().get(startIndex);
                 Door endDoor = endBuilding.getDoors().get(endIndex);
 
-                Node startNode = findNodeForDoor(startDoor);
-                Node endNode = findNodeForDoor(endDoor);
+                Node startNode = findNodeForDoor(startDoor, wheelchair);
+                Node endNode = findNodeForDoor(endDoor, wheelchair);
 
                 if(startNode == null || endNode == null)
                 {
@@ -56,7 +56,7 @@ public class RouteController
                 }
 
                 // Calculate the shortest path
-                List<Segment> shortestPath = findShortestPath(startNode, endNode);
+                List<Segment> shortestPath = findShortestPath(startNode, endNode, wheelchair);
 
                 List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
                 Route currentRoute = new Route(routeCoordinates, startDoor, endDoor);
@@ -81,7 +81,7 @@ public class RouteController
      * @return A Route of the shortest path.
      */
     @RequestMapping("/generateRouteCurrent")
-    public Route generateRoute(@RequestParam(value = "dest") int destID, @RequestParam(value = "currlat") double currLat, @RequestParam(value = "currlong") double currLong)
+    public Route generateRoute(@RequestParam(value = "dest") int destID, @RequestParam(value = "currlat") double currLat, @RequestParam(value = "currlong") double currLong, @RequestParam(value = "wheelchair", defaultValue = "false") boolean wheelchair)
     {
         // Check to see if the graph has been loaded to the server
         graphLoadCheck();
@@ -93,7 +93,7 @@ public class RouteController
         Building endBuilding = bcc.getBuilding(destID);
 
         // Find the start and end nodes in the graph
-        Node startNode = findClosestNode(new Coordinate(currLat, currLong, Coordinate.TYPE.GCS));
+        Node startNode = findClosestNode(new Coordinate(currLat, currLong, Coordinate.TYPE.GCS), wheelchair);
 
         if (startNode == null)
         {
@@ -105,14 +105,14 @@ public class RouteController
         for(int endIndex = 0; endIndex < endBuilding.getDoors().size(); endIndex++)
         {
             Door endDoor = endBuilding.getDoors().get(endIndex);
-            Node endNode = findNodeForDoor(endDoor);
+            Node endNode = findNodeForDoor(endDoor, wheelchair);
 
             if(endNode == null)
             {
                 continue;
             }
 
-            List<Segment> shortestPath = findShortestPath(startNode, endNode);
+            List<Segment> shortestPath = findShortestPath(startNode, endNode, wheelchair);
 
             List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
             Route currentRoute = new Route(routeCoordinates, new Door(-1, "Current Location", new Coordinate(currLat, currLong, Coordinate.TYPE.GCS)), endDoor);
@@ -168,13 +168,26 @@ public class RouteController
      * Find the instances of the start and end nodes in the graph based on the coordinates of the
      * start and end locations
      */
-    private Node findNodeForDoor(Door door)
+    private Node findNodeForDoor(Door door, boolean wheelchairNode)
     {
-        for (Node n : ug.vertexSet())
+        if(wheelchairNode)
         {
-            if (Coordinate.isSamePoint(n.getCoordinate(), door.getCoordinate()))
+            for (Node n : wheelchairGraph.vertexSet())
             {
-                return n;
+                if (Coordinate.isSamePoint(n.getCoordinate(), door.getCoordinate()))
+                {
+                    return n;
+                }
+            }
+        }
+        else
+        {
+            for (Node n : ug.vertexSet())
+            {
+                if (Coordinate.isSamePoint(n.getCoordinate(), door.getCoordinate()))
+                {
+                    return n;
+                }
             }
         }
 
@@ -186,9 +199,16 @@ public class RouteController
      *
      * @return A list of segments of the shortest path
      */
-    private List<Segment> findShortestPath(Node startNode, Node endNode)
+    private List<Segment> findShortestPath(Node startNode, Node endNode, boolean wheelchairAccessibleRoute)
     {
-        return DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+        if(wheelchairAccessibleRoute)
+        {
+            return DijkstraShortestPath.findPathBetween(wheelchairGraph, startNode, endNode);
+        }
+        else
+        {
+            return DijkstraShortestPath.findPathBetween(ug, startNode, endNode);
+        }
     }
 
     /**
@@ -236,7 +256,7 @@ public class RouteController
         return routeCoordinates;
     }
 
-    private Node findClosestNode(Coordinate currentLocation)
+    private Node findClosestNode(Coordinate currentLocation, boolean wheelchairNode)
     {
         Node closestNode = null;
 
@@ -244,12 +264,26 @@ public class RouteController
 
         while (closestNode == null)
         {
-            for (Node n : ug.vertexSet())
+            if(wheelchairNode)
             {
-                if (Coordinate.distance(n.getCoordinate(), currentLocation) < EPSILON)
+                for (Node n : wheelchairGraph.vertexSet())
                 {
-                    closestNode = n;
-                    break;
+                    if (Coordinate.distance(n.getCoordinate(), currentLocation) < EPSILON)
+                    {
+                        closestNode = n;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (Node n : ug.vertexSet())
+                {
+                    if (Coordinate.distance(n.getCoordinate(), currentLocation) < EPSILON)
+                    {
+                        closestNode = n;
+                        break;
+                    }
                 }
             }
 

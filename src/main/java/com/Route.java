@@ -9,6 +9,7 @@ public class Route {
     private Door endDoor;
     private double lengthInFeet;
     private final List<Coordinate> route;
+    private String errorMsg;
 
     public Route(List<Coordinate> route, Door start, Door end){
         this.route = route;
@@ -16,12 +17,18 @@ public class Route {
         endDoor = end;
 
         double length = 0;
-        for(int i = 0; i < route.size() - 1; i++)
-        {
+        if (route != null) {
+            for (int i = 0; i < route.size() - 1; i++) {
             length += Coordinate.distance(route.get(i), route.get(i + 1));
         }
-
+        }
         lengthInFeet = length;
+    }
+    
+    public Route(List<Coordinate> route, Door start, Door end, String errorMsg)
+    {
+        this(route, start, end);
+        this.errorMsg = errorMsg;
     }
 
     public List<Coordinate> getRoute(){
@@ -39,4 +46,7 @@ public class Route {
     public double getLengthInFeet() {
         return lengthInFeet;
     }
+
+    public String getErrorMsg() { return errorMsg; }
+
 }

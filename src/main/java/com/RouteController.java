@@ -56,17 +56,19 @@ public class RouteController
 
                 // Calculate the shortest path
                 List<Segment> shortestPath = findShortestPath(startNode, endNode);
-
+                if (shortestPath != null) {
                 List<Coordinate> routeCoordinates = createRouteCoordinates(shortestPath, startNode);
                 Route currentRoute = new Route(routeCoordinates, startDoor, endDoor);
 
-                if(bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet())
-                {
+                    if (bestRoute == null || currentRoute.getLengthInFeet() < bestRoute.getLengthInFeet()) {
                     bestRoute = currentRoute;
                 }
             }
         }
-
+        }
+        if (bestRoute == null){
+            return new Route(null, null, null, "No route exists between " + startBuilding.getName() + " and " + endBuilding.getName());
+        }
         return bestRoute;
     }
 
@@ -96,7 +98,7 @@ public class RouteController
 
         if (startNode == null)
         {
-            return null; // Starting node could not be found within 300 feet of current location. Route not available.
+            return new Route(null, null, null, "You are not close enough to paths on campus to calculate a route using your current location."); // Starting node could not be found within 300 feet of current location. Route not available.
         }
 
         Route bestRoute = null;
@@ -121,7 +123,9 @@ public class RouteController
                 bestRoute = currentRoute;
             }
         }
-
+        if (bestRoute == null){
+            return new Route(null, null, null, "No route exists between your current location and " + endBuilding.getName() + ".");
+        }
         return bestRoute;
     }
 

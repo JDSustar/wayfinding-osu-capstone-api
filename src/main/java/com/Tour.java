@@ -1,9 +1,9 @@
 package com;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import utilities.Coordinate;
+        import com.fasterxml.jackson.annotation.JsonIgnore;
+        import utilities.Coordinate;
 
-import java.util.List;
+        import java.util.List;
 
 /**
  * Created by JasonDesktop on 4/13/2015.

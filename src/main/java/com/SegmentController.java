@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import oracle.spatial.geometry.JGeometry;
@@ -18,7 +19,7 @@ import utilities.Utility;
 public class SegmentController {
 
     static List<Segment> segments = new ArrayList<Segment>();
-    static List<Node> nodes = new ArrayList<Node>();
+    static HashSet<Node> nodes = new HashSet<Node>();
 
     @RequestMapping("/segments")
     public SegmentCollection segments()
